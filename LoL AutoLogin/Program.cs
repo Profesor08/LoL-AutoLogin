@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace LoL_AutoLogin
 {
@@ -10,33 +11,37 @@ namespace LoL_AutoLogin
 
         static void Main(string[] args)
         {
-            //args = new string[] {"7000", "123", "C:\\Games\\League of Legends\\" };
-            if (args.Length == 3)
+
+            var gamePath = Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Riot Games\\League of Legends", "Path", null);
+            var password = Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Riot Games\\League of Legends", "Password", null);
+          
+            if (gamePath == null)
             {
-                int timeout = int.Parse(args[0]);
-                string password = args[1];
-                string gamePath = args[2];
-
-                LeagueClient client = new LeagueClient(gamePath, "LeagueClient.exe", "LeagueClientUx");
-
-                try
-                {
-                    if (!client.IsRunning())
-                    {
-                        client.Start();
-                        System.Threading.Thread.Sleep(timeout);
-                    }
-                    
-                    client.Login(password);
-                }
-                catch (System.ComponentModel.Win32Exception ex)
-                {
-                    MessageBox.Show(ex.Message + ": " + client.GetClientFile(), "AutoLogin", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show("Game folder not found!", "AutoLogin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else
+
+            if (password == null)
             {
-                MessageBox.Show("Set parameters: [timeout] [password] [gamepath]", "AutoLogin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("You not have saved password. Please enter it below.");
+                Console.Write("Password: ");
+                password = Console.ReadLine();
+                Registry.SetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Riot Games\\League of Legends", "Password", password);
+            }
+
+
+            LeagueClient client = new LeagueClient(gamePath.ToString(), "LeagueClient.exe", "LeagueClientUx");
+
+            if (client.IsRunning())
+            {
+                client.Stop();
+            }
+
+            client.Start();
+
+            if (client.Ready())
+            {
+                client.Login(password.ToString());
             }
 
         }
