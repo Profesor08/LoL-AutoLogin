@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
+using AForge.Imaging;
 
 
 namespace LoL_AutoLogin
@@ -26,9 +19,6 @@ namespace LoL_AutoLogin
         private string leagueClientUx;
 
         private Process process;
-
-        private int MinPixelsMatched = int.MaxValue;
-        private int MaxPixelsMatched = int.MinValue;
 
         [DllImport("User32.dll")]
         private static extern bool ShowWindowAsync(IntPtr hWnd, int cmdShow);
@@ -74,32 +64,41 @@ namespace LoL_AutoLogin
             process.Kill();
         }
 
-        public void Login(string password)
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
+        private enum ShowWindowEnum
         {
-            Process[] localByName = Process.GetProcessesByName(leagueClientUx);
-            Thread.Sleep(1000);
-            foreach (var p in localByName)
-            {
-                SetForegroundWindow(p.MainWindowHandle);
-                ShowWindowAsync(p.MainWindowHandle, 0);
-                Thread.Sleep(1000);
-                // clearing input field
-                /*SendKeys.SendWait("\t");
-                SendKeys.SendWait("\t");
-                SendKeys.SendWait("\t");
-                SendKeys.SendWait("\t");
-                SendKeys.SendWait("^{a}");
-                SendKeys.SendWait(login);
-                SendKeys.SendWait("\t");*/
-                SendKeys.SendWait("^{a}");
-                SendKeys.SendWait(password);
-                SendKeys.SendWait("{ENTER}");
-            }
+            Hide = 0,
+            ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
+            Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
+            Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
+            Restore = 9, ShowDefault = 10, ForceMinimized = 11
+        };
+
+        private void FocusProcess(Process process)
+        {
+            ShowWindow(process.Handle, ShowWindowEnum.Restore);
+            SetForegroundWindow(process.MainWindowHandle);
         }
 
-        public string GetClientFile()
+        public void Login(string password)
         {
-            return leageClientFile;
+            Process clientUx = Process.GetProcessesByName(leagueClientUx).FirstOrDefault();
+
+            if (clientUx != null)
+            {
+                FocusProcess(Process.GetCurrentProcess());
+                Thread.Sleep(500);
+                FocusProcess(clientUx);
+                Thread.Sleep(100);
+                // clearing input field
+                SendKeys.SendWait("^{a}");
+                FocusProcess(clientUx);
+                SendKeys.SendWait(password);
+                FocusProcess(clientUx);
+                SendKeys.SendWait("{ENTER}");
+            }
         }
 
         public bool Ready()
@@ -127,19 +126,60 @@ namespace LoL_AutoLogin
                 {
                     SetForegroundWindow(process.MainWindowHandle);
                     ShowWindowAsync(process.MainWindowHandle, 1);
-                    Thread.Sleep(500);
+
+                    Thread.Sleep(200);
 
                     var clientBitmap = CaptureWindow(process);
 
-                    Bitmap cropped = CropImage(clientBitmap, new Rectangle((int)(clientBitmap.Width * 0.825), 0, (int)(clientBitmap.Width * 0.175), clientBitmap.Height));
+                    var x1 = (int)(clientBitmap.Width * 0.825);
+                    var y1 = 0;
+                    var x2 = (int)(clientBitmap.Width * 0.175);
+                    var y2 = clientBitmap.Height;
 
-                    found = CompareImage(clientBitmap, cropped, 10, 0.85);
+                    Bitmap cropped = CropImage(clientBitmap, new Rectangle(x1, y1, x2, y2));
+
+                    found = CompareImages(cropped, Properties.Resources.login_form, 0.95, 0.99f);
+
+                    //found = CompareImage(Properties.Resources.login_form, cropped, 10, 0.85);
+
+                    //clientBitmap.Save("C:\\Portable Files\\Tests\\a.png", ImageFormat.Png);
+                    //cropped.Save("C:\\Portable Files\\Tests\\b.png", ImageFormat.Png);
+                    //Properties.Resources.login_form.Save("C:\\Portable Files\\Tests\\c.png", ImageFormat.Png);
                 }
 
                 return true;
             }
 
             return false;
+        }
+
+        private static Bitmap ChangePixelFormat(Bitmap inputImage, System.Drawing.Imaging.PixelFormat newFormat)
+        {
+            return (inputImage.Clone(new Rectangle(0, 0, inputImage.Width, inputImage.Height), newFormat));
+        }
+
+        public bool CompareImages(Bitmap image, Bitmap targetImage, double compareLevel, float similarityThreshold)
+        {
+
+            var newBitmap1 = ChangePixelFormat(new Bitmap(image), System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            var newBitmap2 = ChangePixelFormat(new Bitmap(targetImage), System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+
+            // Setup the AForge library
+            var tm = new ExhaustiveTemplateMatching(similarityThreshold);
+
+            // Process the images
+            var results = tm.ProcessImage(newBitmap1, newBitmap2);
+
+            // Compare the results, 0 indicates no match so return false
+            if (results.Length <= 0)
+            {
+                return false;
+            }
+
+            // Return true if similarity score is equal or greater than the comparison level
+            var match = results[0].Similarity >= compareLevel;
+
+            return match;
         }
 
         public Bitmap CaptureWindow(Process process)
@@ -175,47 +215,5 @@ namespace LoL_AutoLogin
             return cropped;
         }
 
-        public bool CompareImage(Bitmap a, Bitmap b, double brightnessTolerance = 10, double matchTolerance = 0.85)
-        {
-            List<short> hashA = GetHash(a);
-            List<short> hashB = GetHash(b);
-
-            // get amount of similar pixels
-            int similar = hashA.Zip(hashB, (i, j) => Math.Abs(i - j) < brightnessTolerance).Count(sim => sim);
-            
-            if (similar > MaxPixelsMatched)
-                MaxPixelsMatched = similar;
-
-            if (similar < MinPixelsMatched)
-                MinPixelsMatched = similar;
-
-            // return true if the amount of similar pixels is over tolerance, false if not
-            return similar > hashA.Count * matchTolerance;
-        }
-
-        public List<short> GetHash(Bitmap source)
-        {
-            // create list
-            List<short> list = new List<short>();
-
-            // resize bitmap
-            Bitmap resized = new Bitmap(source, new Size(900, 900));
-
-            // iterate through every pixel
-            for (int i = 0; i < resized.Width; i++)
-            {
-                for (int j = 0; j < resized.Height; j++)
-                {
-                    // get brightness
-                    float b = resized.GetPixel(i, j).GetBrightness();
-
-                    // convert brightness 0-1 to 0-255 value
-                    list.Add((short)(b * 255));
-                }
-            }
-
-            // return brightness list
-            return list;
-        }
     }
 }
