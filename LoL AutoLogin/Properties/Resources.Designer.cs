@@ -63,9 +63,29 @@ namespace LoL_AutoLogin.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap login_form {
+        internal static System.Drawing.Bitmap big {
             get {
-                object obj = ResourceManager.GetObject("login_form", resourceCulture);
+                object obj = ResourceManager.GetObject("big", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap medium {
+            get {
+                object obj = ResourceManager.GetObject("medium", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap small {
+            get {
+                object obj = ResourceManager.GetObject("small", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
