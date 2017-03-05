@@ -2,58 +2,28 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Linq;
 using System.Threading;
 using AForge.Imaging;
-
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace LoL_AutoLogin
 {
 
     public class LeagueClient
     {
-        private string leagueClientPath;
-        private string leageClientFile;
-        private string leagueClientUx;
 
-        private Process process;
-
-        [DllImport("User32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
-
-        private enum ShowWindowEnum
+        public LeagueClient()
         {
-            Hide = 0,
-            ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
-            Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
-            Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
-            Restore = 9, ShowDefault = 10, ForceMinimized = 11
-        };
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
-
-        public LeagueClient(string leagueClientPath, string leageClientFile, string leagueClientUx)
-        {
-            this.leagueClientPath = leagueClientPath;
-            this.leageClientFile = leageClientFile;
-            this.leagueClientUx = leagueClientUx;
         }
 
         public bool IsRunning()
         {
-            foreach (var process in Process.GetProcessesByName(leageClientFile.Substring(0, leageClientFile.Length - 4)))
+            foreach (var process in Process.GetProcessesByName(Data.ClientFile.Substring(0, Data.ClientFile.Length - 4)))
             {
-                this.process = process;
                 return true;
             }
 
@@ -62,8 +32,8 @@ namespace LoL_AutoLogin
 
         public Process Start()
         {
-            process = new Process();
-            process.StartInfo.FileName = leagueClientPath + leageClientFile;
+            var process = new Process();
+            process.StartInfo.FileName = Data.GamePath + Data.ClientFile;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.Start();
 
@@ -72,68 +42,114 @@ namespace LoL_AutoLogin
 
         public void Stop()
         {
-            foreach(var p in Process.GetProcessesByName(leagueClientUx))
+            var clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
+
+            if (clientUx != null)
             {
-                p.Kill();
+                clientUx.Kill();
             }
 
-            process.Kill();
+            var client = Process.GetProcessesByName(Data.Client).FirstOrDefault();
+
+            if (client != null)
+            {
+                client.Kill();
+            }
         }
 
         private void FocusProcess(Process process)
         {
-            SetForegroundWindow(process.MainWindowHandle);
-            ShowWindow(process.MainWindowHandle, ShowWindowEnum.Restore);
+            while (!ApplicationIsActivated(process))
+            {
+                User32.SetForegroundWindow(process.MainWindowHandle);
+                User32.ShowWindow(process.MainWindowHandle, User32.ShowWindowEnum.Restore);
+            }
         }
 
         public static bool ApplicationIsActivated(Process process)
         {
-            var activatedHandle = GetForegroundWindow();
+            var activatedHandle = User32.GetForegroundWindow();
 
             if (activatedHandle == IntPtr.Zero)
             {
                 // No window is currently activated
-                return false;       
+                return false;
             }
 
             int activeProcId;
-            GetWindowThreadProcessId(activatedHandle, out activeProcId);
+            User32.GetWindowThreadProcessId(activatedHandle, out activeProcId);
 
             return activeProcId == process.Id;
         }
 
-        public void Login(string password)
+        public void Login()
         {
             Log.Write("Get clientUx handle");
-            Process clientUx = Process.GetProcessesByName(leagueClientUx).FirstOrDefault();
+            Process clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
 
             if (clientUx != null)
             {
-                Log.Write("Focus on console");
-                while(!ApplicationIsActivated(Process.GetCurrentProcess()))
-                {
-                    FocusProcess(Process.GetCurrentProcess());
-                }
-                
-                Thread.Sleep(500);
-
-                Log.Write("Focus back to game client");
-
-                while (!ApplicationIsActivated(clientUx))
-                {
-                    FocusProcess(clientUx);
-                }
-
-                Thread.Sleep(500);
-
-                Log.Write("Entering password");
-                // clearing input field
-                SendKeys.SendWait("^{a}");
+                Log.Write("Focus on ClientUx");
                 FocusProcess(clientUx);
-                SendKeys.SendWait(password);
-                FocusProcess(clientUx);
-                SendKeys.SendWait("{ENTER}");
+
+                Log.Write("Focus on Login field");
+                FocusLogin(clientUx);
+
+                Log.Write("Simulation keyboard input");
+                var sim = new InputSimulator();
+
+                sim.Keyboard.TextEntry(Data.Login);
+                sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
+                sim.Keyboard.TextEntry(Data.Password);
+                Thread.Sleep(500);
+                sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
             }
+        }
+
+        private void FocusLogin(Process clientUx)
+        {
+            var defaultCursor = new Point()
+            {
+                X = Cursor.Position.X,
+                Y = Cursor.Position.Y
+            };
+
+            var sim = new InputSimulator();
+
+            Cursor.Position = GetRequiredCursorPosition(clientUx);
+            sim.Mouse.LeftButtonClick();
+            Cursor.Position = defaultCursor;
+        }
+
+        public Point GetRequiredCursorPosition(Process clientUx)
+        {
+            var rect = new User32.Rect();
+
+            int x, y;
+
+            User32.GetWindowRect(clientUx.MainWindowHandle, ref rect);
+
+            switch (rect.right - rect.left)
+            {
+                case 1600:
+                        x = rect.right - 200;
+                        y = rect.top + 240;
+                        break;
+                case 1280:
+                        x = rect.right - 100;
+                        y = rect.top + 200;
+                        break;
+                case 1024:
+                        x = rect.right - 100;
+                        y = rect.top + 150;
+                        break;
+                default:
+                        x = rect.right - 200;
+                        y = rect.top + 240;
+                        break;
+            }
+
+            return new Point(x, y);
         }
 
         public bool Ready()
@@ -161,7 +177,7 @@ namespace LoL_AutoLogin
                 Log.Write("Croping screenshot");
                 var cropped = CropImage(clientBitmap, new Rectangle(x1, y1, x2, y2));
                 Bitmap template;
-                
+
                 switch (cropped.Width)
                 {
                     case 179: template = Properties.Resources.small; break;
@@ -193,7 +209,7 @@ namespace LoL_AutoLogin
             Log.Write("Waiting for ClientUx");
             while (true)
             {
-                var clientUx = Process.GetProcessesByName(leagueClientUx).FirstOrDefault();
+                var clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
 
                 if (clientUx != null && (int)clientUx.MainWindowHandle > 0)
                 {
@@ -219,7 +235,7 @@ namespace LoL_AutoLogin
 
             // Process the images
             var results = tm.ProcessImage(newBitmap1, newBitmap2);
-            
+
             // Compare the results, 0 indicates no match so return false
             if (results.Length <= 0)
             {
