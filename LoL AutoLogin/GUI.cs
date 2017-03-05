@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace LoL_AutoLogin
 {
@@ -10,6 +11,8 @@ namespace LoL_AutoLogin
         public GUI()
         {
             InitializeComponent();
+
+            Icon = Icon.FromHandle(Properties.Resources.icon.GetHicon());
 
             gameFolder.Text = Data.GamePath;
             login.Text = Data.Login;
