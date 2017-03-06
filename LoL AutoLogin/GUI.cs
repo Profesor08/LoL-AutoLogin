@@ -66,11 +66,14 @@ namespace LoL_AutoLogin
 
         private void GUI_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Save changes?", "LoL AutoLogin", MessageBoxButtons.YesNo);
-
-            if (dialogResult == DialogResult.Yes)
+            if (e.CloseReason != CloseReason.None)
             {
-                SaveData();
+                DialogResult dialogResult = MessageBox.Show("Save changes?", "LoL AutoLogin", MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    SaveData();
+                }
             }
         }
     }

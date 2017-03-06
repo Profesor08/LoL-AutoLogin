@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
-using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace LoL_AutoLogin
 {
@@ -36,8 +35,9 @@ namespace LoL_AutoLogin
             {
                 ShowUI = GetShowUI();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 ShowUI = true;
             }
 
@@ -45,43 +45,40 @@ namespace LoL_AutoLogin
             {
                 GamePath = GetGamePath();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 ShowUI = true;
                 GamePath = "";
             }
 
             if (!File.Exists(GamePath + ClientFile))
             {
-                Error("Wrong game directory! File " + ClientFile + " not found.");
+                ShowUI = true;
+                GamePath = "";
             }
 
             try
             {
                 Login = GetLogin();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 ShowUI = true;
                 Login = "";
-                Error("Login not set!");
             }
 
             try
             {
                 Password = GetPassword();
             }
-            catch (Exception)
-            { 
+            catch (Exception ex)
+            {
+                Log.Write(ex);
                 ShowUI = true;
                 Password = "";
-                Error("Password not set!");
             }
-        }
-
-        static void Error(string message)
-        {
-            MessageBox.Show(message, "AutoLogin", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         static string GetGamePath()
@@ -89,10 +86,10 @@ namespace LoL_AutoLogin
             Log.Write("Reading game path from registry");
             var gamePath = Reg.Get("Path");
 
-            if (gamePath != null)
+            if (gamePath == null)
             {
                 Log.Write("Game directory not found. Trying to find game installation info.");
-                gamePath = Reg.Get("Path");
+                gamePath = Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Riot Games\\League of Legends\\", "Path", null);
             }
 
             return gamePath.ToString().TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
@@ -117,7 +114,16 @@ namespace LoL_AutoLogin
                 return true;
             }
 
-            return Convert.ToBoolean(show.ToString());
+            try
+            {
+                return Convert.ToBoolean(show.ToString());
+            }
+            catch (FormatException)
+            {
+                Log.Write("Wrong ShowUI format. Returning false.");
+            }
+
+            return true;
         }
     }
 }

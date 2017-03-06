@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using System.Drawing;
+using System.Security;
 
 namespace LoL_AutoLogin
 {
@@ -15,37 +16,36 @@ namespace LoL_AutoLogin
 
         public static NotifyIcon notifyIcon;
 
+        [STAThread]
         static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if (File.Exists(Log.logFile))
+            try
             {
-                File.Delete(Log.logFile);
-            }
-
-            Data.Load();
-
-            gui = new GUI();
-
-            if (Data.ShowUI)
-            {
-                if (gui.ShowDialog() == DialogResult.OK)
+                if (File.Exists(Log.logFile))
                 {
+                    File.Delete(Log.logFile);
+                }
+
+                Data.Load();
+
+                gui = new GUI();
+
+                if (!Data.ShowUI || gui.ShowDialog() == DialogResult.OK)
+                {
+                    InitTrayIcon();
                     StartClient();
+                    InitExitTimer();
+                    Application.Run();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                StartClient();
+                Error(ex.Message + " For more info refer to .log file.");
+                Log.Write(ex);
             }
-
-            InitTrayIcon();
-
-            InitExitTimer();
-
-            Application.Run();
         }
 
         public static void InitExitTimer()
@@ -67,15 +67,11 @@ namespace LoL_AutoLogin
         {
             notifyIcon.Dispose();
             Application.Exit();
+            Environment.Exit(0);
         }
 
         public static void InitTrayIcon()
         {
-            var components = new System.ComponentModel.Container();
-
-            var contextMenu = new ContextMenu();
-
-
             var exit = new MenuItem();
             exit.Text = "Exit";
             exit.Click += new System.EventHandler(exitItem_Click);
@@ -88,25 +84,16 @@ namespace LoL_AutoLogin
             start.Text = "Start League";
             start.Click += new System.EventHandler(startItem_Click);
 
-            // Initialize contextMenu1
+            var contextMenu = new ContextMenu();
             contextMenu.MenuItems.AddRange(new MenuItem[] { start, options, exit });
 
-            // Create the NotifyIcon.
+            var components = new System.ComponentModel.Container();
+
             notifyIcon = new NotifyIcon(components);
-
-            // The Icon property sets the icon that will appear
-            // in the systray for this application.
             notifyIcon.Icon = Icon.FromHandle(Properties.Resources.icon.GetHicon());
-
-            // The ContextMenu property sets the menu that will
-            // appear when the systray icon is right clicked.
             notifyIcon.ContextMenu = contextMenu;
-
-            // The Text property sets the text that will be displayed,
-            // in a tooltip, when the mouse hovers over the systray icon.
             notifyIcon.Text = "LoL AutoLogin";
             notifyIcon.Visible = true;
-
         }
 
         private static void exitItem_Click(object Sender, EventArgs e)
@@ -155,6 +142,11 @@ namespace LoL_AutoLogin
             }
 
             Log.Write("Application exit.");
+        }
+
+        private static void Error(string message)
+        {
+            MessageBox.Show(message, "AutoLogin", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
     }

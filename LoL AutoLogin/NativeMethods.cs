@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LoL_AutoLogin
 {
-    class User32
+    class NativeMethods
     {
         [StructLayout(LayoutKind.Sequential)]
         public struct Rect
@@ -55,7 +55,7 @@ namespace LoL_AutoLogin
         };
 
         [DllImport("user32.dll")]
-        public static extern IntPtr GetWindowRect(IntPtr hWnd, ref Rect rect);
+        public static extern Int32 GetWindowRect(IntPtr hWnd, ref Rect rect);
 
         [DllImport("user32.dll")]
         public static extern bool SetCursorPos(int X, int Y);
@@ -67,15 +67,6 @@ namespace LoL_AutoLogin
         public static extern void mouse_event(MouseEventFlag flags, int dx, int dy, uint data, UIntPtr extraInfo);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr FindWindow(string strClass, string strWindow);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr FindWindowEx(HandleRef hwndParent, HandleRef hwndChildAfter, string strClass, string strWindow);
-
-        [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(HandleRef hwnd, out NativeRECT rect);
-
-        [DllImport("User32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]

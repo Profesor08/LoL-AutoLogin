@@ -11,5 +11,19 @@ namespace LoL_AutoLogin
         {
             File.AppendAllText(logFile, msg + Environment.NewLine);
         }
+
+        public static void Write(Exception ex)
+        {
+            using (var writer = new StreamWriter(logFile, true))
+            {
+                writer.WriteLine(
+                    "=>{0} An Error occurred: {1}  Message: {2}{3}",
+                    DateTime.Now,
+                    ex.StackTrace,
+                    ex.Message,
+                    Environment.NewLine
+               );
+            }
+        }
     }
 }

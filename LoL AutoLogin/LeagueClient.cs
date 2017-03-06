@@ -61,14 +61,14 @@ namespace LoL_AutoLogin
         {
             while (!ApplicationIsActivated(process))
             {
-                User32.SetForegroundWindow(process.MainWindowHandle);
-                User32.ShowWindow(process.MainWindowHandle, User32.ShowWindowEnum.Restore);
+                NativeMethods.SetForegroundWindow(process.MainWindowHandle);
+                NativeMethods.ShowWindow(process.MainWindowHandle, NativeMethods.ShowWindowEnum.Restore);
             }
         }
 
         public static bool ApplicationIsActivated(Process process)
         {
-            var activatedHandle = User32.GetForegroundWindow();
+            var activatedHandle = NativeMethods.GetForegroundWindow();
 
             if (activatedHandle == IntPtr.Zero)
             {
@@ -77,7 +77,7 @@ namespace LoL_AutoLogin
             }
 
             int activeProcId;
-            User32.GetWindowThreadProcessId(activatedHandle, out activeProcId);
+            NativeMethods.GetWindowThreadProcessId(activatedHandle, out activeProcId);
 
             return activeProcId == process.Id;
         }
@@ -98,10 +98,14 @@ namespace LoL_AutoLogin
                 Log.Write("Simulation keyboard input");
                 var sim = new InputSimulator();
 
+                FocusProcess(clientUx);
                 sim.Keyboard.TextEntry(Data.Login);
+                FocusProcess(clientUx);
                 sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
+                FocusProcess(clientUx);
                 sim.Keyboard.TextEntry(Data.Password);
                 Thread.Sleep(500);
+                FocusProcess(clientUx);
                 sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
             }
         }
@@ -123,11 +127,11 @@ namespace LoL_AutoLogin
 
         public Point GetRequiredCursorPosition(Process clientUx)
         {
-            var rect = new User32.Rect();
+            var rect = new NativeMethods.Rect();
 
             int x, y;
 
-            User32.GetWindowRect(clientUx.MainWindowHandle, ref rect);
+            NativeMethods.GetWindowRect(clientUx.MainWindowHandle, ref rect);
 
             switch (rect.right - rect.left)
             {
@@ -250,9 +254,9 @@ namespace LoL_AutoLogin
 
         public Bitmap CaptureClientUxScreenshot(Process process)
         {
-            var rect = new User32.Rect();
+            var rect = new NativeMethods.Rect();
 
-            User32.GetWindowRect(process.MainWindowHandle, ref rect);
+            NativeMethods.GetWindowRect(process.MainWindowHandle, ref rect);
 
             int width = rect.right - rect.left;
             int height = rect.bottom - rect.top;
