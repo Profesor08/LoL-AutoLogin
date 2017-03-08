@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using System.Drawing;
-using System.Security;
 
 namespace LoL_AutoLogin
 {
@@ -124,7 +123,7 @@ namespace LoL_AutoLogin
             LeagueClient client = new LeagueClient();
 
             Log.Write("Checking if game client is running.");
-            if (client.IsRunning())
+            if (client.IsRunning)
             {
                 Log.Write("Game client is running. Stopping it.");
                 client.Stop();
@@ -133,12 +132,12 @@ namespace LoL_AutoLogin
             Log.Write("Game client not running. Starting it.");
             client.Start();
 
-            Log.Write("Checking if game client is ready for entering password.");
-            if (client.Ready())
+            Log.Write("Checking if game client is ready for login.");
+            if (client.Ready)
             {
-                Log.Write("Game client is ready for entering password.");
+                Log.Write("Game client is ready for login.");
                 client.Login();
-                Log.Write("Password entering is seems to be successful");
+                Log.Write("Login is seems to be successful");
             }
 
             Log.Write("Application exit.");

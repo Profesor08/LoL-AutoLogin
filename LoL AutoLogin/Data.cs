@@ -54,6 +54,7 @@ namespace LoL_AutoLogin
 
             if (!File.Exists(GamePath + ClientFile))
             {
+                Log.Write("Game path is wrong. File " + ClientFile + " not found.");
                 ShowUI = true;
                 GamePath = "";
             }

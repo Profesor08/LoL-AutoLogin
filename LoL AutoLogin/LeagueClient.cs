@@ -8,38 +8,55 @@ using System.Threading;
 using AForge.Imaging;
 using WindowsInput;
 using WindowsInput.Native;
+using System.Collections.Generic;
 
 namespace LoL_AutoLogin
 {
 
-    public class LeagueClient
+
+    class LeagueClient
     {
+
+        /// <summary>
+        /// Default login form template for comparation in different sizes 
+        /// </summary>
+        private Dictionary<int, Bitmap> templates;
 
         public LeagueClient()
         {
-
-        }
-
-        public bool IsRunning()
-        {
-            foreach (var process in Process.GetProcessesByName(Data.ClientFile.Substring(0, Data.ClientFile.Length - 4)))
+            templates = new Dictionary<int, Bitmap>()
             {
-                return true;
-            }
-
-            return false;
+                { 179, Properties.Resources.small },
+                { 224, Properties.Resources.medium },
+                { 280, Properties.Resources.big }
+            };
         }
 
-        public Process Start()
+        /// <summary>
+        /// Check if LeagueClient is running
+        /// </summary>
+        public bool IsRunning
+        {
+            get
+            {
+                return Process.GetProcessesByName(Data.Client).FirstOrDefault() != null;
+            }
+        }
+
+        /// <summary>
+        /// Start LeagueClient
+        /// </summary>
+        public void Start()
         {
             var process = new Process();
             process.StartInfo.FileName = Data.GamePath + Data.ClientFile;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.Start();
-
-            return process;
         }
 
+        /// <summary>
+        /// Closing LeagueClient and it LeagueClientUx
+        /// </summary>
         public void Stop()
         {
             var clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
@@ -57,15 +74,97 @@ namespace LoL_AutoLogin
             }
         }
 
+        /// <summary>
+        /// Waiting for LeagueClientUx is loaded and it is ready for entering login and password
+        /// </summary>
+        public bool Ready
+        {
+            get
+            {
+                return LoginFormReady(ClientUxProcess);
+            }
+        }
+
+        /// <summary>
+        /// Getting LeagueClientUx Process
+        /// </summary>
+        private Process ClientUxProcess
+        {
+            get
+            {
+                while (true)
+                {
+                    var clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
+
+                    if (clientUx != null && (int)clientUx.MainWindowHandle > 0)
+                    {
+                        return clientUx;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Waiting until login form is ready
+        /// </summary>
+        /// <param name="clientUx"></param>
+        /// <returns></returns>
+        private bool LoginFormReady(Process clientUx)
+        {
+            Log.Write("Checking if LeagueClientUx load finished");
+
+            while (true)
+            {
+                Thread.Sleep(200);
+                Log.Write("Focus on LeagueClientUx");
+                FocusProcess(clientUx);
+
+                Log.Write("Capturing Screenshot from LeagueClientUx");
+                var clientBitmap = CaptureClientUxScreenshot(clientUx);
+
+                var x1 = (int)(clientBitmap.Width * 0.825);
+                var y1 = 0;
+                var x2 = (int)(clientBitmap.Width * 0.175);
+                var y2 = clientBitmap.Height;
+
+                if (!templates.ContainsKey(x2))
+                {
+                    // If LeagueClientUx window is not displayed
+                    continue;
+                }
+
+                Log.Write("Croping screenshot");
+                var cropped = CropImage(clientBitmap, new Rectangle(x1, y1, x2, y2));
+
+                Log.Write("Comparing images");
+                if (CompareImages(cropped, templates[x2], 0.95, 0.99f))
+                {
+                    Log.Write("Images are equal enouhg");
+                    Log.Write("Game client is ready for password entering");
+                    return true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set focus to Process and moving it window to Foreground
+        /// </summary>
+        /// <param name="process"></param>
         private void FocusProcess(Process process)
         {
             while (!ApplicationIsActivated(process))
             {
+                Thread.Sleep(10);
                 NativeMethods.SetForegroundWindow(process.MainWindowHandle);
                 NativeMethods.ShowWindow(process.MainWindowHandle, NativeMethods.ShowWindowEnum.Restore);
             }
         }
 
+        /// <summary>
+        /// Check if Process is focused and it window in Foreground
+        /// </summary>
+        /// <param name="process"></param>
+        /// <returns></returns>
         public static bool ApplicationIsActivated(Process process)
         {
             var activatedHandle = NativeMethods.GetForegroundWindow();
@@ -79,155 +178,60 @@ namespace LoL_AutoLogin
             int activeProcId;
             NativeMethods.GetWindowThreadProcessId(activatedHandle, out activeProcId);
 
+            // Compare process id with current active process, if the are the same 
+            // it's mean process if currently is focused
             return activeProcId == process.Id;
         }
 
-        public void Login()
+        /// <summary>
+        /// Capturing LeagueClientUx window ScreenShot
+        /// </summary>
+        /// <param name="process"></param>
+        /// <returns></returns>
+        public Bitmap CaptureClientUxScreenshot(Process process)
         {
-            Log.Write("Get clientUx handle");
-            Process clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
+            // Get Windows dimensions
+            var rect = NativeMethods.GetWindowRect(process.MainWindowHandle);
 
-            if (clientUx != null)
-            {
-                Log.Write("Focus on ClientUx");
-                FocusProcess(clientUx);
+            // Calculation window size by extracting from right corner position on positions of left corner
+            // becouse position of corners is calculateted from 0x0 of screen
+            var width = rect.right - rect.left;
+            var height = rect.bottom - rect.top;
+            var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            Graphics graphics = Graphics.FromImage(bmp);
 
-                Log.Write("Focus on Login field");
-                FocusLogin(clientUx);
+            // Copy all pixels from screen to image 
+            graphics.CopyFromScreen(rect.left, rect.top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
 
-                Log.Write("Simulation keyboard input");
-                var sim = new InputSimulator();
-
-                FocusProcess(clientUx);
-                sim.Keyboard.TextEntry(Data.Login);
-                FocusProcess(clientUx);
-                sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
-                FocusProcess(clientUx);
-                sim.Keyboard.TextEntry(Data.Password);
-                Thread.Sleep(500);
-                FocusProcess(clientUx);
-                sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
-            }
+            return bmp;
         }
 
-        private void FocusLogin(Process clientUx)
+        /// <summary>
+        /// Crop LeagueClientUx window screenshot to get only login form image
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        private Bitmap CropImage(Bitmap bitmap, Rectangle rect)
         {
-            var defaultCursor = new Point()
+            Bitmap cropped = new Bitmap(rect.Width, rect.Height);
+
+            using (Graphics g = Graphics.FromImage(cropped))
             {
-                X = Cursor.Position.X,
-                Y = Cursor.Position.Y
-            };
-
-            var sim = new InputSimulator();
-
-            Cursor.Position = GetRequiredCursorPosition(clientUx);
-            sim.Mouse.LeftButtonClick();
-            Cursor.Position = defaultCursor;
-        }
-
-        public Point GetRequiredCursorPosition(Process clientUx)
-        {
-            var rect = new NativeMethods.Rect();
-
-            int x, y;
-
-            NativeMethods.GetWindowRect(clientUx.MainWindowHandle, ref rect);
-
-            switch (rect.right - rect.left)
-            {
-                case 1600:
-                        x = rect.right - 200;
-                        y = rect.top + 240;
-                        break;
-                case 1280:
-                        x = rect.right - 100;
-                        y = rect.top + 200;
-                        break;
-                case 1024:
-                        x = rect.right - 100;
-                        y = rect.top + 150;
-                        break;
-                default:
-                        x = rect.right - 200;
-                        y = rect.top + 240;
-                        break;
+                g.DrawImage(bitmap, -rect.X, -rect.Y);
             }
 
-            return new Point(x, y);
+            return cropped;
         }
 
-        public bool Ready()
-        {
-            return LoginFormReady(GetClientUxProcess());
-        }
-
-        public bool LoginFormReady(Process clientUx)
-        {
-            Log.Write("Checking if ClientUx load finished");
-            while (true)
-            {
-                Log.Write("Focus on ClientUx");
-                FocusProcess(clientUx);
-
-                Thread.Sleep(200);
-                Log.Write("Capturing Screenshot from ClientUx");
-                var clientBitmap = CaptureClientUxScreenshot(clientUx);
-
-                var x1 = (int)(clientBitmap.Width * 0.825);
-                var y1 = 0;
-                var x2 = (int)(clientBitmap.Width * 0.175);
-                var y2 = clientBitmap.Height;
-
-                Log.Write("Croping screenshot");
-                var cropped = CropImage(clientBitmap, new Rectangle(x1, y1, x2, y2));
-                Bitmap template;
-
-                switch (cropped.Width)
-                {
-                    case 179: template = Properties.Resources.small; break;
-                    case 224: template = Properties.Resources.medium; break;
-                    case 280: template = Properties.Resources.big; break;
-                    default: template = Properties.Resources.big; break;
-                }
-
-                //cropped.Save("C:\\Portable Files\\Tests\\a.png", ImageFormat.Png);
-                //template.Save("C:\\Portable Files\\Tests\\b.png", ImageFormat.Png);
-
-                Log.Write("Comparing images");
-                if (CompareImages(cropped, template, 0.95, 0.99f))
-                {
-                    Log.Write("Images are equal enouhg");
-                    Log.Write("Game client is ready for password entering");
-                    return true;
-                }
-            }
-        }
-
-        public static Bitmap ResizeImage(Bitmap image, Size size)
-        {
-            return new Bitmap(image, size);
-        }
-
-        public Process GetClientUxProcess()
-        {
-            Log.Write("Waiting for ClientUx");
-            while (true)
-            {
-                var clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
-
-                if (clientUx != null && (int)clientUx.MainWindowHandle > 0)
-                {
-                    Log.Write("ClientUx found");
-                    return clientUx;
-                }
-            }
-        }
-
-        private static Bitmap ChangePixelFormat(Bitmap inputImage, PixelFormat newFormat)
-        {
-            return inputImage.Clone(new Rectangle(0, 0, inputImage.Width, inputImage.Height), newFormat);
-        }
-
+        /// <summary>
+        /// Compare image with template image according to compare level and similarity threshold
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="targetImage"></param>
+        /// <param name="compareLevel"></param>
+        /// <param name="similarityThreshold"></param>
+        /// <returns></returns>
         public bool CompareImages(Bitmap image, Bitmap targetImage, double compareLevel, float similarityThreshold)
         {
 
@@ -252,34 +256,99 @@ namespace LoL_AutoLogin
             return match;
         }
 
-        public Bitmap CaptureClientUxScreenshot(Process process)
+        /// <summary>
+        /// Changind pixel format of image into indicated format
+        /// </summary>
+        /// <param name="inputImage"></param>
+        /// <param name="newFormat"></param>
+        /// <returns></returns>
+        private static Bitmap ChangePixelFormat(Bitmap inputImage, PixelFormat newFormat)
+        {
+            return inputImage.Clone(new Rectangle(0, 0, inputImage.Width, inputImage.Height), newFormat);
+        }
+
+        /// <summary>
+        /// Entering login and password to login form and submiting it
+        /// </summary>
+        public void Login()
+        {
+            Log.Write("Get LeagueClientUx handle");
+            Process clientUx = ClientUxProcess;
+
+            if (clientUx != null)
+            {
+                Log.Write("Focus on LeagueClientUx");
+                FocusProcess(clientUx);
+
+                Log.Write("Focus on Login field");
+                FocusLogin(clientUx);
+
+                Log.Write("Simulation keyboard input");
+                var sim = new InputSimulator();
+
+                FocusProcess(clientUx);
+                sim.Keyboard.TextEntry(Data.Login);
+                sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
+                sim.Keyboard.TextEntry(Data.Password);
+                Thread.Sleep(500);
+                FocusProcess(clientUx);
+                sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
+            }
+        }
+
+        /// <summary>
+        /// Focusing on login field by clicking on it by mouse and restoring cursor posiion back
+        /// </summary>
+        /// <param name="clientUx"></param>
+        private void FocusLogin(Process clientUx)
+        {
+            var defaultCursor = new Point()
+            {
+                X = Cursor.Position.X,
+                Y = Cursor.Position.Y
+            };
+
+            var sim = new InputSimulator();
+
+            Cursor.Position = GetRequiredCursorPosition(clientUx);
+            sim.Mouse.LeftButtonClick();
+            Cursor.Position = defaultCursor;
+        }
+
+        /// <summary>
+        /// Get position of cursor for clicking on login field
+        /// </summary>
+        /// <param name="clientUx"></param>
+        /// <returns></returns>
+        public Point GetRequiredCursorPosition(Process clientUx)
         {
             var rect = new NativeMethods.Rect();
 
-            NativeMethods.GetWindowRect(process.MainWindowHandle, ref rect);
+            int x, y;
 
-            int width = rect.right - rect.left;
-            int height = rect.bottom - rect.top;
+            NativeMethods.GetWindowRect(clientUx.MainWindowHandle, ref rect);
 
-            var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
-            Graphics graphics = Graphics.FromImage(bmp);
-
-            graphics.CopyFromScreen(rect.left, rect.top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
-
-            return bmp;
-        }
-
-        private Bitmap CropImage(Bitmap bitmap, Rectangle rect)
-        {
-            Bitmap cropped = new Bitmap(rect.Width, rect.Height);
-
-            using (Graphics g = Graphics.FromImage(cropped))
+            switch (rect.right - rect.left)
             {
-                g.DrawImage(bitmap, -rect.X, -rect.Y);
+                case 1600:
+                    x = rect.right - 200;
+                    y = rect.top + 240;
+                    break;
+                case 1280:
+                    x = rect.right - 100;
+                    y = rect.top + 200;
+                    break;
+                case 1024:
+                    x = rect.right - 100;
+                    y = rect.top + 150;
+                    break;
+                default:
+                    x = rect.right - 200;
+                    y = rect.top + 240;
+                    break;
             }
 
-            return cropped;
+            return new Point(x, y);
         }
 
     }

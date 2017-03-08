@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoL_AutoLogin
 {
@@ -79,7 +75,13 @@ namespace LoL_AutoLogin
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
+        public static Rect GetWindowRect(IntPtr hWnd)
+        {
+            var rect = new Rect();
+            GetWindowRect(hWnd, ref rect);
 
+            return rect;
+        }
 
         public static bool SetCursorPos(Point point)
         {
