@@ -188,6 +188,10 @@
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
     <Content Include="icon.ico" />
+    <None Include="Resources\BeaufortforLOL-Bold.ttf" />
+    <None Include="Resources\BeaufortforLOL-Italic.ttf" />
+    <None Include="Resources\BeaufortforLOL-Regular.ttf" />
+    <None Include="Resources\Friz Quadrata.ttf" />
     <None Include="Resources\smallFormButton-hover.png" />
     <None Include="Resources\smallFormButton.png" />
     <None Include="Resources\smallForm.png" />
@@ -199,13 +203,13 @@
     <None Include="Resources\check-hover.png" />
     <None Include="Resources\check-checked-hover.png" />
     <None Include="Resources\check-checked.png" />
+    <None Include="Resources\Spiegel-Regular.ttf" />
+    <None Include="Resources\Spiegel-RegularItalic.ttf" />
     <None Include="Resources\textBox-hover.png" />
     <None Include="Resources\textBox.png" />
     <None Include="Resources\background.png" />
-    <None Include="Resources\BeaufortforLOL-Bold.ttf" />
     <None Include="Resources\play-hover.png" />
     <None Include="Resources\play.png" />
-    <None Include="Resources\BeaufortforLOL-Regular.ttf" />
     <None Include="Resources\icon.png" />
     <None Include="Resources\small.png" />
     <None Include="Resources\medium.png" />

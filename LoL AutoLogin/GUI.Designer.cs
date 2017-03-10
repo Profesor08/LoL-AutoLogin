@@ -194,8 +194,6 @@
             this.Name = "GUI";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoL AutoLogin";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
-            this.Load += new System.EventHandler(this.UI_Load);
             this.Click += new System.EventHandler(this.GUI_Click);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GUI_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GUI_MouseMove);

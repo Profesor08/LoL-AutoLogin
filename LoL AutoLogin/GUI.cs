@@ -5,18 +5,19 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
-using System.ComponentModel;
-using System.Windows.Media;
-using FontAwesome.Sharp;
-using System.Windows.Documents;
 
 namespace LoL_AutoLogin
 {
     public partial class GUI : Form
     {
 
-        PrivateFontCollection BeaufortforLOL_Regular;
-        PrivateFontCollection BeaufortforLOL_Bold;
+        FontFamily BeaufortforLOL_Regular;
+        FontFamily BeaufortforLOL_Bold;
+        FontFamily BeaufortforLOL_Italic;
+        FontFamily Spiegel_Regular;
+        FontFamily Spiegel_Italic;
+        FontFamily Friz_Quadrata;
+
         Font leagueFont_25;
         Font inputFont;
         Font labelFont;
@@ -35,22 +36,29 @@ namespace LoL_AutoLogin
         public GUI()
         {
             InitializeComponent();
-            BeaufortforLOL_Regular = new PrivateFontCollection();
-            BeaufortforLOL_Bold = new PrivateFontCollection();
 
-            AddFontToPrivateCollection(BeaufortforLOL_Regular, Properties.Resources.BeaufortforLOL_Regular);
-            AddFontToPrivateCollection(BeaufortforLOL_Bold, Properties.Resources.BeaufortforLOL_Bold);
+            Icon = Icon.FromHandle(Properties.Resources.icon.GetHicon());
 
+            BeaufortforLOL_Regular = LoadFont(Properties.Resources.BeaufortforLOL_Regular);
+            BeaufortforLOL_Bold = LoadFont(Properties.Resources.BeaufortforLOL_Bold);
+            BeaufortforLOL_Italic = LoadFont(Properties.Resources.BeaufortforLOL_Italic);
+            Spiegel_Regular = LoadFont(Properties.Resources.Spiegel_Regular);
+            Spiegel_Italic = LoadFont(Properties.Resources.Spiegel_RegularItalic);
+            Friz_Quadrata = LoadFont(Properties.Resources.Friz_Quadrata);
 
-            leagueFont_25 = new Font(BeaufortforLOL_Bold.Families[0], 25, GraphicsUnit.Pixel);
-            inputFont = new Font(BeaufortforLOL_Bold.Families[0], 20, GraphicsUnit.Pixel);
-            labelFont = new Font(BeaufortforLOL_Regular.Families[0], 10, FontStyle.Bold);
+            about = new About(BeaufortforLOL_Regular);
+
+            leagueFont_25 = new Font(BeaufortforLOL_Bold, 25, GraphicsUnit.Pixel);
+            inputFont = new Font(BeaufortforLOL_Bold, 17, GraphicsUnit.Pixel);
+
+   
+            labelFont = new Font(BeaufortforLOL_Bold, 15, GraphicsUnit.Pixel);
 
             login = new ImageTextBox();
             login.Location = new Point(74, 228);
             login.BorderStyle = BorderStyle.None;
             login.Size = new Size(238, 37);
-            login.ForeColor = System.Drawing.Color.Red;
+            login.ForeColor = Color.Red;
             login.Multiline = true;
             login.Font = inputFont;
             login.BackgroundImage = Properties.Resources.textBox;
@@ -60,7 +68,7 @@ namespace LoL_AutoLogin
             password.Location = new Point(318, 228);
             password.BorderStyle = BorderStyle.None;
             password.Size = new Size(238, 37);
-            password.ForeColor = System.Drawing.Color.Red;
+            password.ForeColor = Color.Red;
             password.Multiline = true;
             password.Font = inputFont;
             password.BackgroundImage = Properties.Resources.textBox;
@@ -69,15 +77,15 @@ namespace LoL_AutoLogin
 
             
 
-            loginLabel = InitAntiAliasedLabel("Login", new Point(71, 209), System.Drawing.Color.FromArgb(160, 155, 140));
-            passwordLabel = InitAntiAliasedLabel("Password", new Point(318, 209), System.Drawing.Color.FromArgb(160, 155, 140));
-            showWindowLabel = InitAntiAliasedLabel("Show window on start", new Point(90, 272), System.Drawing.Color.FromArgb(160, 155, 140));
+            loginLabel = InitAntiAliasedLabel("Login", new Point(71, 209), Color.FromArgb(160, 155, 140));
+            passwordLabel = InitAntiAliasedLabel("Password", new Point(318, 209), Color.FromArgb(160, 155, 140));
+            showWindowLabel = InitAntiAliasedLabel("Show window on start", new Point(90, 270), Color.FromArgb(160, 155, 140));
 
-            titleLabel = InitAntiAliasedLabel("AutoLogin", new Point(234, 20), System.Drawing.Color.FromArgb(160, 155, 140));
-            titleLabel.Font = new Font(BeaufortforLOL_Bold.Families[0], 30, FontStyle.Bold, GraphicsUnit.Pixel);
-            titleLabel.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            titleLabel = InitAntiAliasedLabel("AutoLogin", new Point(234, 20), Color.FromArgb(160, 155, 140));
+            titleLabel.Font = new Font(BeaufortforLOL_Bold, 30, FontStyle.Bold, GraphicsUnit.Pixel);
+            titleLabel.ForeColor = Color.DarkGoldenrod;
 
-            gameFolder = InitAntiAliasedLabel("", new Point(74, 174), System.Drawing.Color.FromArgb(160, 155, 140));
+            gameFolder = InitAntiAliasedLabel("", new Point(74, 174), Color.FromArgb(160, 155, 140));
             gameFolder.BorderStyle = BorderStyle.FixedSingle;
             gameFolder.AutoSize = false;
             gameFolder.Width = 455;
@@ -93,34 +101,39 @@ namespace LoL_AutoLogin
             Controls.Add(gameFolder);
             Controls.Add(titleLabel);
 
-            about = new About(BeaufortforLOL_Regular);
+            closeButton.ForeColor = Color.FromArgb(160, 155, 140);
+            hideButton.ForeColor = Color.FromArgb(160, 155, 140);
+
+            InitPlayButtonAnimations();
 
             if (Data.ShowUI)
             {
                 showWindowChechBox.Image = Properties.Resources.check_checked;
             }
 
-
-            Icon = System.Drawing.Icon.FromHandle(Properties.Resources.icon.GetHicon());
-
-            closeButton.ForeColor = System.Drawing.Color.FromArgb(160, 155, 140);
-            hideButton.ForeColor = System.Drawing.Color.FromArgb(160, 155, 140);
-
-            InitPlayButtonAnimations();
-
-            playButton.Parent = this;
-
             gameFolder.Text = Data.GamePath;
             login.Text = Data.Login;
             password.Text = Data.Password;
         }
 
-        private AntiAliasedLabel InitAntiAliasedLabel(string text, Point position, System.Drawing.Color color)
+        private FontFamily LoadFont(byte[] font)
+        {
+            var pfc = new PrivateFontCollection();
+
+            IntPtr pointer = Marshal.AllocCoTaskMem(font.Length);
+            Marshal.Copy(font, 0, pointer, font.Length);
+            pfc.AddMemoryFont(pointer, font.Length);
+            Marshal.FreeCoTaskMem(pointer);
+
+            return pfc.Families[0];
+        }
+
+        private AntiAliasedLabel InitAntiAliasedLabel(string text, Point position, Color color)
         {
             var aaLabel = new AntiAliasedLabel();
             aaLabel.Text = text;
             aaLabel.Location = position;
-            aaLabel.BackColor = System.Drawing.Color.Transparent;
+            aaLabel.BackColor = Color.Transparent;
             aaLabel.ForeColor = color;
             aaLabel.Font = labelFont;
 
@@ -134,30 +147,6 @@ namespace LoL_AutoLogin
             System.Reflection.MethodInfo misSetStyle = typeTB.GetMethod("SetStyle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (misSetStyle != null && c != null) { misSetStyle.Invoke(c, new object[] { Style, value }); retval = true; }
             return retval;
-        }
-
-        private void UI_Load(object sender, EventArgs e)
-        {
-            /*if (!Data.ShowUI)
-            {
-                BeginInvoke(new MethodInvoker(Close));
-                StartClient();
-            }*/
-        }
-
-        private void AddFontToPrivateCollection(PrivateFontCollection collection, byte[] fontResource)
-        {
-            // create an unsafe memory block for the font data
-            IntPtr data = Marshal.AllocCoTaskMem(fontResource.Length);
-
-            // copy the bytes to the unsafe memory block
-            Marshal.Copy(fontResource, 0, data, fontResource.Length);
-
-            // pass the font to the font collection
-            collection.AddMemoryFont(data, fontResource.Length);
-
-            // free up the unsafe memory
-            Marshal.FreeCoTaskMem(data);
         }
 
         private void selectFolderButton_Click(object sender, EventArgs e)
@@ -190,19 +179,6 @@ namespace LoL_AutoLogin
             Data.Login = login.Text;
             Data.Password = password.Text;
             Data.Save();
-        }
-
-        private void GUI_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason != CloseReason.None)
-            {
-                DialogResult dialogResult = MessageBox.Show("Save changes?", "LoL AutoLogin", MessageBoxButtons.YesNo);
-
-                if (dialogResult == DialogResult.Yes)
-                {
-                    SaveData();
-                }
-            }
         }
 
         private void InitPlayButtonAnimations()
@@ -308,24 +284,31 @@ namespace LoL_AutoLogin
 
         private void playButton_Paint(object sender, PaintEventArgs e)
         {
-            var brush = new SolidBrush(System.Drawing.Color.FromArgb(240, 230, 210));
+            var brush = new SolidBrush(Color.FromArgb(240, 230, 210));
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
             e.Graphics.DrawString("Start", leagueFont_25, brush, new Point(80, 8));
         }
 
         private void closeButton_Click(object sender, EventArgs e)
         {
+            DialogResult dialogResult = MessageBox.Show("Save changes?", "LoL AutoLogin", MessageBoxButtons.YesNo);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                SaveData();
+            }
+
             Close();
         }
 
         private void closeButton_MouseEnter(object sender, EventArgs e)
         {
-            closeButton.ForeColor = System.Drawing.Color.FromArgb(240, 230, 210);
+            closeButton.ForeColor = Color.FromArgb(240, 230, 210);
         }
 
         private void closeButton_MouseLeave(object sender, EventArgs e)
         {
-            closeButton.ForeColor = System.Drawing.Color.FromArgb(160, 155, 140);
+            closeButton.ForeColor = Color.FromArgb(160, 155, 140);
         }
 
         private void hideButton_Click(object sender, EventArgs e)
@@ -335,12 +318,12 @@ namespace LoL_AutoLogin
 
         private void hideButton_MouseEnter(object sender, EventArgs e)
         {
-            hideButton.ForeColor = System.Drawing.Color.FromArgb(240, 230, 210);
+            hideButton.ForeColor = Color.FromArgb(240, 230, 210);
         }
 
         private void hideButton_MouseLeave(object sender, EventArgs e)
         {
-            hideButton.ForeColor = System.Drawing.Color.FromArgb(160, 155, 140);
+            hideButton.ForeColor = Color.FromArgb(160, 155, 140);
         }
 
         bool mouseDown = false;
@@ -430,8 +413,8 @@ namespace LoL_AutoLogin
 
         private void infoButton_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show("Developed by Profesor08");
             about.ShowDialog();
         }
     }
+
 }

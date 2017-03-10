@@ -95,9 +95,9 @@ namespace LoL_AutoLogin
 
             var text = PasswordChar == 0 ? Text : GetPasswordText();
 
-            var point = PasswordChar == 0 ? new Point(5, 4) : new Point(5, 8);
+            var point = PasswordChar == 0 ? new Point(5, 6) : new Point(5, 10);
 
-            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+            //g.TextRenderingHint = TextRenderingHint.AntiAlias;
             g.DrawString(text, Font, brush, point);
             backgroundPictureBox.Image = image;
         }

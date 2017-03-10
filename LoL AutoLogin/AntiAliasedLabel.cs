@@ -10,11 +10,12 @@ namespace LoL_AutoLogin
         public AntiAliasedLabel() : base()
         {
             AutoSize = true;
+            UseCompatibleTextRendering = true;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.TextRenderingHint = TextRenderingHint;
+            //e.Graphics.TextRenderingHint = TextRenderingHint;
             base.OnPaint(e);
         }
     }

@@ -75,6 +75,9 @@ namespace LoL_AutoLogin
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
+        [DllImport("gdi32.dll")]
+        public static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [In] ref uint pcFonts);
+
         public static Rect GetWindowRect(IntPtr hWnd)
         {
             var rect = new Rect();

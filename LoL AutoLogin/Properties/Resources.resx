@@ -184,4 +184,16 @@
   <data name="smallFormButton_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\smallFormButton-hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="BeaufortforLOL_Italic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BeaufortforLOL-Italic.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Spiegel_Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Spiegel-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Spiegel_RegularItalic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Spiegel-RegularItalic.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Friz_Quadrata" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Friz Quadrata.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

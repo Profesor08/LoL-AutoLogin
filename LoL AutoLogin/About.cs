@@ -24,13 +24,13 @@ namespace LoL_AutoLogin
             this.BackColor = Color.Turquoise;
         }
 
-        public About(PrivateFontCollection fontCollection)
+        public About(FontFamily fontCollection)
         {
             InitializeComponent();
             this.TransparencyKey = Color.Turquoise;
             this.BackColor = Color.Turquoise;
 
-            button.Font = new Font(fontCollection.Families[0], 17, FontStyle.Bold, GraphicsUnit.Pixel);
+            button.Font = new Font(fontCollection, 17, FontStyle.Bold, GraphicsUnit.Pixel);
             button.ForeColor = Color.FromArgb(160, 155, 140);
 
             var label = new AntiAliasedLabel();
@@ -40,7 +40,7 @@ namespace LoL_AutoLogin
             label.AutoSize = false;
             label.BackColor = Color.Transparent;
             label.ForeColor = Color.FromArgb(160, 155, 140);
-            label.Font = new Font(fontCollection.Families[0], 14, FontStyle.Bold, GraphicsUnit.Pixel);
+            label.Font = new Font(fontCollection, 17, FontStyle.Bold, GraphicsUnit.Pixel);
             label.TextAlign = ContentAlignment.MiddleCenter;
 
             Controls.Add(label);

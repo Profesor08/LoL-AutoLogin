@@ -83,6 +83,16 @@ namespace LoL_AutoLogin.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        internal static byte[] BeaufortforLOL_Italic {
+            get {
+                object obj = ResourceManager.GetObject("BeaufortforLOL_Italic", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         internal static byte[] BeaufortforLOL_Regular {
             get {
                 object obj = ResourceManager.GetObject("BeaufortforLOL_Regular", resourceCulture);
@@ -137,6 +147,16 @@ namespace LoL_AutoLogin.Properties {
             get {
                 object obj = ResourceManager.GetObject("check_hover", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Friz_Quadrata {
+            get {
+                object obj = ResourceManager.GetObject("Friz_Quadrata", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -257,6 +277,26 @@ namespace LoL_AutoLogin.Properties {
             get {
                 object obj = ResourceManager.GetObject("smallFormButton_hover", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Spiegel_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Spiegel_Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Spiegel_RegularItalic {
+            get {
+                object obj = ResourceManager.GetObject("Spiegel_RegularItalic", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
