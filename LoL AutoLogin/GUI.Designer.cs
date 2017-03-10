@@ -28,133 +28,194 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.gameFolder = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.login = new System.Windows.Forms.TextBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUI));
             this.selectFolder = new System.Windows.Forms.Button();
-            this.startButton = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.password = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.playButton = new System.Windows.Forms.PictureBox();
+            this.closeButton = new System.Windows.Forms.Label();
+            this.hideButton = new System.Windows.Forms.Label();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.showWindowChechBox = new System.Windows.Forms.PictureBox();
+            this.infoButton = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.playButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.showWindowChechBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoButton)).BeginInit();
             this.SuspendLayout();
-            // 
-            // gameFolder
-            // 
-            this.gameFolder.Location = new System.Drawing.Point(75, 6);
-            this.gameFolder.Name = "gameFolder";
-            this.gameFolder.Size = new System.Drawing.Size(269, 20);
-            this.gameFolder.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Folder";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label2
-            // 
-            this.label2.Location = new System.Drawing.Point(12, 36);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 16);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Login";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // login
-            // 
-            this.login.Location = new System.Drawing.Point(75, 33);
-            this.login.Name = "login";
-            this.login.Size = new System.Drawing.Size(234, 20);
-            this.login.TabIndex = 3;
             // 
             // selectFolder
             // 
-            this.selectFolder.Location = new System.Drawing.Point(350, 5);
+            this.selectFolder.BackColor = System.Drawing.Color.Transparent;
+            this.selectFolder.BackgroundImage = global::LoL_AutoLogin.Properties.Resources.options;
+            this.selectFolder.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.selectFolder.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.selectFolder.FlatAppearance.BorderSize = 0;
+            this.selectFolder.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.selectFolder.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.selectFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.selectFolder.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.selectFolder.Location = new System.Drawing.Point(532, 173);
+            this.selectFolder.Margin = new System.Windows.Forms.Padding(0);
             this.selectFolder.Name = "selectFolder";
-            this.selectFolder.Size = new System.Drawing.Size(75, 22);
+            this.selectFolder.Size = new System.Drawing.Size(24, 24);
             this.selectFolder.TabIndex = 2;
             this.selectFolder.Text = "Select";
-            this.selectFolder.UseVisualStyleBackColor = true;
+            this.selectFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.selectFolder.UseVisualStyleBackColor = false;
             this.selectFolder.Click += new System.EventHandler(this.selectFolderButton_Click);
+            this.selectFolder.MouseEnter += new System.EventHandler(this.selectFolder_MouseEnter);
+            this.selectFolder.MouseLeave += new System.EventHandler(this.selectFolder_MouseLeave);
             // 
-            // startButton
+            // playButton
             // 
-            this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.startButton.Location = new System.Drawing.Point(315, 32);
-            this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(110, 48);
-            this.startButton.TabIndex = 6;
-            this.startButton.Text = "Start";
-            this.startButton.UseVisualStyleBackColor = true;
-            this.startButton.Click += new System.EventHandler(this.startButton_Click);
+            this.playButton.BackColor = System.Drawing.Color.Transparent;
+            this.playButton.BackgroundImage = global::LoL_AutoLogin.Properties.Resources.play;
+            this.playButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.playButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.playButton.Location = new System.Drawing.Point(411, 281);
+            this.playButton.Name = "playButton";
+            this.playButton.Size = new System.Drawing.Size(202, 50);
+            this.playButton.TabIndex = 9;
+            this.playButton.TabStop = false;
+            this.playButton.Click += new System.EventHandler(this.playButton_Click);
+            this.playButton.Paint += new System.Windows.Forms.PaintEventHandler(this.playButton_Paint);
             // 
-            // checkBox1
+            // closeButton
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(75, 85);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(130, 17);
-            this.checkBox1.TabIndex = 5;
-            this.checkBox1.Text = "Show window on start";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.closeButton.BackColor = System.Drawing.Color.Transparent;
+            this.closeButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.closeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.closeButton.ForeColor = System.Drawing.Color.White;
+            this.closeButton.Location = new System.Drawing.Point(581, 3);
+            this.closeButton.Margin = new System.Windows.Forms.Padding(0);
+            this.closeButton.Name = "closeButton";
+            this.closeButton.Size = new System.Drawing.Size(23, 23);
+            this.closeButton.TabIndex = 10;
+            this.closeButton.Text = "✖";
+            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
+            this.closeButton.MouseEnter += new System.EventHandler(this.closeButton_MouseEnter);
+            this.closeButton.MouseLeave += new System.EventHandler(this.closeButton_MouseLeave);
             // 
-            // password
+            // hideButton
             // 
-            this.password.Location = new System.Drawing.Point(75, 59);
-            this.password.Name = "password";
-            this.password.PasswordChar = '*';
-            this.password.Size = new System.Drawing.Size(234, 20);
-            this.password.TabIndex = 4;
+            this.hideButton.BackColor = System.Drawing.Color.Transparent;
+            this.hideButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.hideButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.hideButton.ForeColor = System.Drawing.Color.White;
+            this.hideButton.Location = new System.Drawing.Point(549, -2);
+            this.hideButton.Margin = new System.Windows.Forms.Padding(0);
+            this.hideButton.Name = "hideButton";
+            this.hideButton.Size = new System.Drawing.Size(20, 23);
+            this.hideButton.TabIndex = 11;
+            this.hideButton.Text = "_";
+            this.hideButton.Click += new System.EventHandler(this.hideButton_Click);
+            this.hideButton.MouseEnter += new System.EventHandler(this.hideButton_MouseEnter);
+            this.hideButton.MouseLeave += new System.EventHandler(this.hideButton_MouseLeave);
             // 
-            // label3
+            // richTextBox2
             // 
-            this.label3.Location = new System.Drawing.Point(12, 62);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(57, 16);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Password";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.richTextBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.richTextBox2.Location = new System.Drawing.Point(318, 228);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.richTextBox2.Size = new System.Drawing.Size(238, 37);
+            this.richTextBox2.TabIndex = 15;
+            this.richTextBox2.Text = " gdfg dfg dfg dfg";
+            this.richTextBox2.Visible = false;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.richTextBox1.Location = new System.Drawing.Point(74, 228);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.richTextBox1.Size = new System.Drawing.Size(238, 37);
+            this.richTextBox1.TabIndex = 14;
+            this.richTextBox1.Text = " gdfg dfg dfg dfg";
+            this.richTextBox1.Visible = false;
+            // 
+            // showWindowChechBox
+            // 
+            this.showWindowChechBox.BackColor = System.Drawing.Color.Transparent;
+            this.showWindowChechBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("showWindowChechBox.BackgroundImage")));
+            this.showWindowChechBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.showWindowChechBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.showWindowChechBox.Image = ((System.Drawing.Image)(resources.GetObject("showWindowChechBox.Image")));
+            this.showWindowChechBox.Location = new System.Drawing.Point(74, 272);
+            this.showWindowChechBox.Name = "showWindowChechBox";
+            this.showWindowChechBox.Size = new System.Drawing.Size(16, 16);
+            this.showWindowChechBox.TabIndex = 16;
+            this.showWindowChechBox.TabStop = false;
+            this.showWindowChechBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.showWindowChechBox_MouseDown);
+            this.showWindowChechBox.MouseEnter += new System.EventHandler(this.showWindow_MouseEnter);
+            this.showWindowChechBox.MouseLeave += new System.EventHandler(this.showWindow_MouseLeave);
+            // 
+            // infoButton
+            // 
+            this.infoButton.BackColor = System.Drawing.Color.Transparent;
+            this.infoButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.infoButton.Image = ((System.Drawing.Image)(resources.GetObject("infoButton.Image")));
+            this.infoButton.Location = new System.Drawing.Point(5, 3);
+            this.infoButton.Name = "infoButton";
+            this.infoButton.Size = new System.Drawing.Size(23, 42);
+            this.infoButton.TabIndex = 17;
+            this.infoButton.TabStop = false;
+            this.infoButton.Click += new System.EventHandler(this.infoButton_Click);
+            this.infoButton.MouseEnter += new System.EventHandler(this.infoButton_MouseEnter);
+            this.infoButton.MouseLeave += new System.EventHandler(this.infoButton_MouseLeave);
+            // 
+            // label1
+            // 
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Location = new System.Drawing.Point(74, 174);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(455, 22);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "label1";
+            this.label1.Visible = false;
             // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(435, 107);
-            this.Controls.Add(this.password);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.startButton);
-            this.Controls.Add(this.selectFolder);
-            this.Controls.Add(this.login);
-            this.Controls.Add(this.label2);
+            this.BackgroundImage = global::LoL_AutoLogin.Properties.Resources.background;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ClientSize = new System.Drawing.Size(625, 343);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.gameFolder);
+            this.Controls.Add(this.infoButton);
+            this.Controls.Add(this.showWindowChechBox);
+            this.Controls.Add(this.richTextBox2);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.hideButton);
+            this.Controls.Add(this.closeButton);
+            this.Controls.Add(this.playButton);
+            this.Controls.Add(this.selectFolder);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "GUI";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoL AutoLogin";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
             this.Load += new System.EventHandler(this.UI_Load);
+            this.Click += new System.EventHandler(this.GUI_Click);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GUI_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GUI_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GUI_MouseUp);
+            ((System.ComponentModel.ISupportInitialize)(this.playButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.showWindowChechBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoButton)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox gameFolder;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox login;
         private System.Windows.Forms.Button selectFolder;
-        private System.Windows.Forms.Button startButton;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.TextBox password;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.PictureBox playButton;
+        private System.Windows.Forms.Label closeButton;
+        private System.Windows.Forms.Label hideButton;
+        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.PictureBox showWindowChechBox;
+        private System.Windows.Forms.PictureBox infoButton;
+        private System.Windows.Forms.Label label1;
     }
 }

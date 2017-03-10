@@ -114,7 +114,9 @@ namespace LoL_AutoLogin
 
         private static void startItem_Click(object Sender, EventArgs e)
         {
+            StopExitTimer();
             StartClient();
+            InitExitTimer();
         }
 
         private static void StartClient()
@@ -140,7 +142,7 @@ namespace LoL_AutoLogin
                 Log.Write("Login is seems to be successful");
             }
 
-            Log.Write("Application exit.");
+            GC.Collect();
         }
 
         private static void Error(string message)

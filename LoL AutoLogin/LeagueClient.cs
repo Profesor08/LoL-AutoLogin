@@ -92,9 +92,11 @@ namespace LoL_AutoLogin
         {
             get
             {
+                Process clientUx;
+
                 while (true)
                 {
-                    var clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
+                    clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
 
                     if (clientUx != null && (int)clientUx.MainWindowHandle > 0)
                     {
@@ -121,7 +123,7 @@ namespace LoL_AutoLogin
 
                 Log.Write("Capturing Screenshot from LeagueClientUx");
                 var clientBitmap = CaptureClientUxScreenshot(clientUx);
-
+                
                 var x1 = (int)(clientBitmap.Width * 0.825);
                 var y1 = 0;
                 var x2 = (int)(clientBitmap.Width * 0.175);
@@ -137,11 +139,16 @@ namespace LoL_AutoLogin
                 var cropped = CropImage(clientBitmap, new Rectangle(x1, y1, x2, y2));
 
                 Log.Write("Comparing images");
-                if (CompareImages(cropped, templates[x2], 0.95, 0.99f))
+                var equal = CompareImages(cropped, templates[x2], 0.95, 0.99f);
+
+                clientBitmap.Dispose();
+                cropped.Dispose();
+
+                if (equal)
                 {
                     Log.Write("Images are equal enouhg");
                     Log.Write("Game client is ready for password entering");
-                    return true;
+                     return true;
                 }
             }
         }
@@ -198,12 +205,14 @@ namespace LoL_AutoLogin
             var width = rect.right - rect.left;
             var height = rect.bottom - rect.top;
             var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            Graphics graphics = Graphics.FromImage(bmp);
 
-            // Copy all pixels from screen to image 
-            graphics.CopyFromScreen(rect.left, rect.top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
+            using (Graphics graphics = Graphics.FromImage(bmp))
+            {
+                // Copy all pixels from screen to image 
+                graphics.CopyFromScreen(rect.left, rect.top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
 
-            return bmp;
+                return bmp;
+            }
         }
 
         /// <summary>
@@ -244,6 +253,10 @@ namespace LoL_AutoLogin
             // Process the images
             var results = tm.ProcessImage(newBitmap1, newBitmap2);
 
+            image.Dispose();
+            newBitmap1.Dispose();
+            newBitmap2.Dispose();
+
             // Compare the results, 0 indicates no match so return false
             if (results.Length <= 0)
             {
@@ -282,17 +295,24 @@ namespace LoL_AutoLogin
 
                 Log.Write("Focus on Login field");
                 FocusLogin(clientUx);
-
+                
                 Log.Write("Simulation keyboard input");
                 var sim = new InputSimulator();
 
-                FocusProcess(clientUx);
+                //FocusProcess(clientUx);
+                Thread.Sleep(100);
+                sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
+                Thread.Sleep(100);
                 sim.Keyboard.TextEntry(Data.Login);
+                Thread.Sleep(200);
                 sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
+                sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
                 sim.Keyboard.TextEntry(Data.Password);
                 Thread.Sleep(500);
                 FocusProcess(clientUx);
                 sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
+
+                sim = null;
             }
         }
 
