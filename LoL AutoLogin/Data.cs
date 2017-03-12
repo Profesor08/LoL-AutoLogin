@@ -13,13 +13,89 @@ namespace LoL_AutoLogin
 
         public static string Client = "LeagueClient";
 
-        public static bool ShowUI = true;
+        private static bool showUI = true;
 
-        public static string GamePath;
+        private static string gamePath;
 
-        public static string Login;
+        private static string login;
 
-        public static string Password;
+        private static string password;
+
+        private static bool TrackChanges = false;
+
+        public static bool Changed = false;
+
+        public static string GamePath
+        {
+            get
+            {
+                return gamePath;
+            }
+
+            set
+            {
+                gamePath = value;
+
+                if (TrackChanges)
+                {
+                    Changed = true;
+                }
+            }
+        }
+
+        public static string Login
+        {
+            get
+            {
+                return login;
+            }
+
+            set
+            {
+                login = value;
+
+                if (TrackChanges)
+                {
+                    Changed = true;
+                }
+            }
+        }
+
+        public static string Password
+        {
+            get
+            {
+                return password;
+            }
+
+            set
+            {
+                password = value;
+
+                if (TrackChanges)
+                {
+                    Changed = true;
+                }
+            }
+        }
+
+        public static bool ShowUI
+        {
+            get
+            {
+                return showUI;
+            }
+
+            set
+            {
+                showUI = value;
+
+                if (TrackChanges)
+                {
+                    Changed = true;
+                }
+            }
+        }
 
         public static void Save()
         {
@@ -31,6 +107,7 @@ namespace LoL_AutoLogin
 
         public static void Load()
         {
+
             try
             {
                 ShowUI = GetShowUI();
@@ -80,6 +157,8 @@ namespace LoL_AutoLogin
                 ShowUI = true;
                 Password = "";
             }
+
+            TrackChanges = true;
         }
 
         static string GetGamePath()

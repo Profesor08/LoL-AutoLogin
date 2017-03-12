@@ -66,7 +66,6 @@ namespace LoL_AutoLogin
 
         private void FocusEnter(object sender, EventArgs e)
         {
-            Text = "";
             DrawTextOnBackgroundImage();
         }
 
@@ -79,11 +78,6 @@ namespace LoL_AutoLogin
         {
             base.OnTextChanged(e);
             DrawTextOnBackgroundImage();
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-
         }
 
         private void DrawTextOnBackgroundImage()

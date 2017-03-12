@@ -23,8 +23,8 @@ namespace LoL_AutoLogin
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            try
-            {
+            /*try
+            {*/
                 if (File.Exists(Log.logFile))
                 {
                     File.Delete(Log.logFile);
@@ -43,12 +43,12 @@ namespace LoL_AutoLogin
                     InitExitTimer();
                     Application.Run();
                 }
-            }
+            /*}
             catch (Exception ex)
             {
                 Error(ex.Message + " For more info refer to .log file.");
                 Log.Write(ex);
-            }
+            }*/
         }
 
         public static void InitExitTimer()
