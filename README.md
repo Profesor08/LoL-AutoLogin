@@ -1,8 +1,8 @@
 # LoL-AutoLogin
 Auto login tool for League of Legends
 
-![GUI Image](http://image.prntscr.com/image/f8c5eed0a5b946db891e49b142504e7b.png)
-![GUI About](http://image.prntscr.com/image/2544d1679df94bbb9ba3527434b90ad9.png)
+![GUI Image](http://image.prntscr.com/image/99b55d4037f446018f4c5e83380e5e26.png)
+![GUI About](http://image.prntscr.com/image/a3e2af9a2bde4fd28b2453bcb91b5ea2.png)
 
 # Using
 1. Download programm https://github.com/Profesor08/LoL-AutoLogin/releases
