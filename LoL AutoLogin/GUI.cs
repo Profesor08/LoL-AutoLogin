@@ -11,95 +11,33 @@ namespace LoL_AutoLogin
     public partial class GUI : Form
     {
 
-        FontFamily BeaufortforLOL_Regular;
-        FontFamily BeaufortforLOL_Bold;
-        FontFamily BeaufortforLOL_Italic;
-        FontFamily Spiegel_Regular;
-        FontFamily Spiegel_Italic;
-        FontFamily Friz_Quadrata;
+        private FontFamily BeaufortforLOL_Regular;
+        private FontFamily BeaufortforLOL_Bold;
+        private FontFamily BeaufortforLOL_Italic;
+        private FontFamily Spiegel_Regular;
+        private FontFamily Spiegel_Italic;
+        private FontFamily Friz_Quadrata;
 
-        Font leagueFont_25;
-        Font inputFont;
-        Font labelFont;
+        private ImageTextBox login;
+        private ImageTextBox password;
 
-        ImageTextBox login;
-        ImageTextBox password;
+        private AntiAliasedLabel loginLabel;
+        private AntiAliasedLabel passwordLabel;
+        private AntiAliasedLabel showWindowLabel;
+        private AntiAliasedLabel gameFolder;
+        private AntiAliasedLabel titleLabel;
 
-        AntiAliasedLabel loginLabel;
-        AntiAliasedLabel passwordLabel;
-        AntiAliasedLabel showWindowLabel;
-        AntiAliasedLabel gameFolder;
-        AntiAliasedLabel titleLabel;
-
-        About about;
+        private About about;
 
         public GUI()
         {
             InitializeComponent();
+            InitializeFonts();
+            InitializeCustomComponent();
 
             Icon = Icon.FromHandle(Properties.Resources.icon.GetHicon());
 
-            BeaufortforLOL_Regular = LoadFont(Properties.Resources.BeaufortforLOL_Regular);
-            BeaufortforLOL_Bold = LoadFont(Properties.Resources.BeaufortforLOL_Bold);
-            BeaufortforLOL_Italic = LoadFont(Properties.Resources.BeaufortforLOL_Italic);
-            Spiegel_Regular = LoadFont(Properties.Resources.Spiegel_Regular);
-            Spiegel_Italic = LoadFont(Properties.Resources.Spiegel_RegularItalic);
-            Friz_Quadrata = LoadFont(Properties.Resources.Friz_Quadrata);
-
             about = new About(BeaufortforLOL_Regular);
-
-            leagueFont_25 = new Font(BeaufortforLOL_Bold, 25, GraphicsUnit.Pixel);
-            inputFont = new Font(BeaufortforLOL_Bold, 17, GraphicsUnit.Pixel);
-
-   
-            labelFont = new Font(BeaufortforLOL_Bold, 15, GraphicsUnit.Pixel);
-
-            login = new ImageTextBox();
-            login.Location = new Point(74, 228);
-            login.BorderStyle = BorderStyle.None;
-            login.Size = new Size(238, 37);
-            login.ForeColor = Color.Red;
-            login.Multiline = true;
-            login.Font = inputFont;
-            login.BackgroundImage = Properties.Resources.textBox;
-            login.BackgroundImageActive = Properties.Resources.textBox_hover;
-
-            password = new ImageTextBox();
-            password.Location = new Point(318, 228);
-            password.BorderStyle = BorderStyle.None;
-            password.Size = new Size(238, 37);
-            password.ForeColor = Color.Red;
-            password.Multiline = true;
-            password.Font = inputFont;
-            password.BackgroundImage = Properties.Resources.textBox;
-            password.BackgroundImageActive = Properties.Resources.textBox_hover;
-            password.PasswordChar = '*';
-
-            
-
-            loginLabel = InitAntiAliasedLabel("Login", new Point(71, 209), Color.FromArgb(160, 155, 140));
-            passwordLabel = InitAntiAliasedLabel("Password", new Point(318, 209), Color.FromArgb(160, 155, 140));
-            showWindowLabel = InitAntiAliasedLabel("Show window on start", new Point(90, 270), Color.FromArgb(160, 155, 140));
-
-            titleLabel = InitAntiAliasedLabel("AutoLogin", new Point(234, 20), Color.FromArgb(160, 155, 140));
-            titleLabel.Font = new Font(BeaufortforLOL_Bold, 30, FontStyle.Bold, GraphicsUnit.Pixel);
-            titleLabel.ForeColor = Color.DarkGoldenrod;
-
-            gameFolder = InitAntiAliasedLabel("", new Point(74, 174), Color.FromArgb(160, 155, 140));
-            gameFolder.BorderStyle = BorderStyle.FixedSingle;
-            gameFolder.AutoSize = false;
-            gameFolder.Width = 455;
-            gameFolder.Height = 22;
-            gameFolder.TextAlign = ContentAlignment.MiddleLeft;
-            gameFolder.Click += new EventHandler(selectFolderButton_Click);
-
-            Controls.Add(login);
-            Controls.Add(password);
-            Controls.Add(loginLabel);
-            Controls.Add(passwordLabel);
-            Controls.Add(showWindowLabel);
-            Controls.Add(gameFolder);
-            Controls.Add(titleLabel);
 
             closeButton.ForeColor = Color.FromArgb(160, 155, 140);
             hideButton.ForeColor = Color.FromArgb(160, 155, 140);
@@ -116,69 +54,96 @@ namespace LoL_AutoLogin
             password.Text = Data.Password;
         }
 
-        private FontFamily LoadFont(byte[] font)
+        private void InitializeFonts()
         {
-            var pfc = new PrivateFontCollection();
-
-            IntPtr pointer = Marshal.AllocCoTaskMem(font.Length);
-            Marshal.Copy(font, 0, pointer, font.Length);
-            pfc.AddMemoryFont(pointer, font.Length);
-            Marshal.FreeCoTaskMem(pointer);
-
-            return pfc.Families[0];
+            BeaufortforLOL_Regular = LoadFont(Properties.Resources.BeaufortforLOL_Regular);
+            BeaufortforLOL_Bold = LoadFont(Properties.Resources.BeaufortforLOL_Bold);
+            BeaufortforLOL_Italic = LoadFont(Properties.Resources.BeaufortforLOL_Italic);
+            Spiegel_Regular = LoadFont(Properties.Resources.Spiegel_Regular);
+            Spiegel_Italic = LoadFont(Properties.Resources.Spiegel_RegularItalic);
+            Friz_Quadrata = LoadFont(Properties.Resources.Friz_Quadrata);
         }
 
-        private AntiAliasedLabel InitAntiAliasedLabel(string text, Point position, Color color)
+        private void InitializeCustomComponent()
         {
-            var aaLabel = new AntiAliasedLabel();
-            aaLabel.Text = text;
-            aaLabel.Location = position;
-            aaLabel.BackColor = Color.Transparent;
-            aaLabel.ForeColor = color;
-            aaLabel.Font = labelFont;
+            login = new ImageTextBox();
+            password = new ImageTextBox();
+            loginLabel = new AntiAliasedLabel();
+            passwordLabel = new AntiAliasedLabel();
+            showWindowLabel = new AntiAliasedLabel();
+            titleLabel = new AntiAliasedLabel();
+            gameFolder = new AntiAliasedLabel();
 
-            return aaLabel;
-        }
 
-        public static bool SetStyle(Control c, ControlStyles Style, bool value)
-        {
-            bool retval = false;
-            Type typeTB = typeof(Control);
-            System.Reflection.MethodInfo misSetStyle = typeTB.GetMethod("SetStyle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (misSetStyle != null && c != null) { misSetStyle.Invoke(c, new object[] { Style, value }); retval = true; }
-            return retval;
-        }
+            login.Location = new Point(74, 228);
+            login.BorderStyle = BorderStyle.None;
+            login.Size = new Size(238, 37);
+            login.ForeColor = Color.Red;
+            login.Multiline = true;
+            login.Font = new Font(BeaufortforLOL_Bold, 17, GraphicsUnit.Pixel);
+            login.BackgroundImage = Properties.Resources.textBox;
+            login.BackgroundImageActive = Properties.Resources.textBox_hover;
+            login.Enter += new EventHandler(login_Enter);
+            login.Leave += new EventHandler(login_Leave);
 
-        private void selectFolderButton_Click(object sender, EventArgs e)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
+            password.Location = new Point(318, 228);
+            password.BorderStyle = BorderStyle.None;
+            password.Size = new Size(238, 37);
+            password.ForeColor = Color.Red;
+            password.Multiline = true;
+            password.Font = new Font(BeaufortforLOL_Bold, 17, GraphicsUnit.Pixel);
+            password.BackgroundImage = Properties.Resources.textBox;
+            password.BackgroundImageActive = Properties.Resources.textBox_hover;
+            password.PasswordChar = '*';
+            password.Enter += new EventHandler(password_Enter);
+            password.Leave += new EventHandler(password_Leave);
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    Data.GamePath = fbd.SelectedPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-                    gameFolder.Text = Data.GamePath;
-                }
-                else
-                {
-                    MessageBox.Show("Game folder not selected!", "AutoLogin", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-        }
 
-        private void startButton_Click(object sender, EventArgs e)
-        {
-            SaveData();
-        }
 
-        private void SaveData()
-        {
-            Data.GamePath = gameFolder.Text;
-            Data.Login = login.Text;
-            Data.Password = password.Text;
-            Data.Save();
+            loginLabel.Location = new Point(71, 209);
+            loginLabel.ForeColor = Color.FromArgb(160, 155, 140);
+            loginLabel.BackColor = Color.Transparent;
+            loginLabel.Font = new Font(BeaufortforLOL_Bold, 15, GraphicsUnit.Pixel);
+            loginLabel.Text = "Login";
+
+            passwordLabel.Location = new Point(318, 209);
+            passwordLabel.ForeColor = Color.FromArgb(160, 155, 140);
+            passwordLabel.BackColor = Color.Transparent;
+            passwordLabel.Font = new Font(BeaufortforLOL_Bold, 15, GraphicsUnit.Pixel);
+            passwordLabel.Text = "Password";
+
+            showWindowLabel.Location = new Point(90, 270);
+            showWindowLabel.ForeColor = Color.FromArgb(160, 155, 140);
+            showWindowLabel.BackColor = Color.Transparent;
+            showWindowLabel.Font = new Font(BeaufortforLOL_Bold, 15, GraphicsUnit.Pixel);
+            showWindowLabel.Text = "Show window on start";
+
+            titleLabel.Location = new Point(234, 20);
+            titleLabel.ForeColor = Color.DarkGoldenrod;
+            titleLabel.BackColor = Color.Transparent;
+            titleLabel.Font = new Font(BeaufortforLOL_Bold, 30, FontStyle.Bold, GraphicsUnit.Pixel);
+            titleLabel.Text = "AutoLogin";
+            titleLabel.MouseDown += new MouseEventHandler(GUI_MouseDown);
+            titleLabel.MouseUp += new MouseEventHandler(GUI_MouseUp);
+            titleLabel.MouseMove += new MouseEventHandler(GUI_MouseMove);
+
+            gameFolder.Location = new Point(74, 174);
+            gameFolder.ForeColor = Color.FromArgb(160, 155, 140);
+            gameFolder.BackColor = Color.Transparent;
+            gameFolder.BorderStyle = BorderStyle.FixedSingle;
+            gameFolder.AutoSize = false;
+            gameFolder.Width = 455;
+            gameFolder.Height = 22;
+            gameFolder.TextAlign = ContentAlignment.MiddleLeft;
+            gameFolder.Click += new EventHandler(selectFolderButton_Click);
+
+            Controls.Add(login);
+            Controls.Add(password);
+            Controls.Add(loginLabel);
+            Controls.Add(passwordLabel);
+            Controls.Add(showWindowLabel);
+            Controls.Add(gameFolder);
+            Controls.Add(titleLabel);
         }
 
         private void InitPlayButtonAnimations()
@@ -239,6 +204,93 @@ namespace LoL_AutoLogin
 
         }
 
+        private void login_Enter(object sender, EventArgs e)
+        {
+            login.TempText = login.Text;
+            login.Text = "";
+            Data.Changed = true;
+        }
+
+        private void login_Leave(object sender, EventArgs e)
+        {
+            if (login.Text.Length == 0)
+            {
+                login.Text = login.TempText;
+                Data.Changed = false;
+            }
+        }
+
+        private void password_Enter(object sender, EventArgs e)
+        {
+            password.TempText = password.Text;
+            password.Text = "";
+            Data.Changed = true;
+        }
+
+        private void password_Leave(object sender, EventArgs e)
+        {
+            if (password.Text.Length == 0)
+            {
+                password.Text = password.TempText;
+                Data.Changed = false;
+            }
+        }
+
+        private FontFamily LoadFont(byte[] font)
+        {
+            var pfc = new PrivateFontCollection();
+
+            IntPtr pointer = Marshal.AllocCoTaskMem(font.Length);
+            Marshal.Copy(font, 0, pointer, font.Length);
+            pfc.AddMemoryFont(pointer, font.Length);
+            uint cFonts = 0;
+            NativeMethods.AddFontMemResourceEx(pointer, (uint)font.Length, IntPtr.Zero, ref cFonts);
+            Marshal.FreeCoTaskMem(pointer);
+
+            return pfc.Families[0];
+        }
+
+        public static bool SetStyle(Control c, ControlStyles Style, bool value)
+        {
+            bool retval = false;
+            Type typeTB = typeof(Control);
+            System.Reflection.MethodInfo misSetStyle = typeTB.GetMethod("SetStyle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (misSetStyle != null && c != null) { misSetStyle.Invoke(c, new object[] { Style, value }); retval = true; }
+            return retval;
+        }
+
+        private void selectFolderButton_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    Data.GamePath = fbd.SelectedPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                    gameFolder.Text = Data.GamePath;
+                }
+                else
+                {
+                    MessageBox.Show("Game folder not selected!", "AutoLogin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+        }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            SaveData();
+        }
+
+        private void SaveData()
+        {
+            Data.GamePath = gameFolder.Text;
+            Data.Login = login.Text;
+            Data.Password = password.Text;
+            Data.Save();
+        }
+
         public Bitmap SetImageOpacity(Bitmap image, float opacity)
         {
             // Initialize the color matrix.
@@ -286,16 +338,19 @@ namespace LoL_AutoLogin
         {
             var brush = new SolidBrush(Color.FromArgb(240, 230, 210));
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-            e.Graphics.DrawString("Start", leagueFont_25, brush, new Point(80, 8));
+            e.Graphics.DrawString("Start", new Font(BeaufortforLOL_Bold, 25, GraphicsUnit.Pixel), brush, new Point(80, 8));
         }
 
         private void closeButton_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Save changes?", "LoL AutoLogin", MessageBoxButtons.YesNo);
-
-            if (dialogResult == DialogResult.Yes)
+            if (Data.Changed)
             {
-                SaveData();
+                DialogResult dialogResult = MessageBox.Show("Save changes?", "LoL AutoLogin", MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    SaveData();
+                }
             }
 
             Close();
@@ -332,7 +387,16 @@ namespace LoL_AutoLogin
         private void GUI_MouseDown(object sender, MouseEventArgs e)
         {
             mouseDown = true;
-            mousePosition = new Point(e.X, e.Y);
+
+            if (sender is AntiAliasedLabel)
+            {
+                var label = (AntiAliasedLabel)sender;
+                mousePosition = new Point(label.Location.X + e.X, label.Location.Y + e.Y);
+            }
+            else if(sender is GUI)
+            {
+                mousePosition = new Point(e.X, e.Y);
+            }
         }
 
         private void GUI_MouseUp(object sender, MouseEventArgs e)

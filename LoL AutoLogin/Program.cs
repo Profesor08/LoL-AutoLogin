@@ -15,6 +15,10 @@ namespace LoL_AutoLogin
 
         public static NotifyIcon notifyIcon;
 
+        private static string Version = "1.7.2";
+
+        public static object ToastNotificationManager { get; private set; }
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -29,12 +33,13 @@ namespace LoL_AutoLogin
                 }
 
                 Data.Load();
-
+                
                 gui = new GUI();
+
+                InitTrayIcon();
 
                 if (!Data.ShowUI || gui.ShowDialog() == DialogResult.OK)
                 {
-                    InitTrayIcon();
                     StartClient();
                     InitExitTimer();
                     Application.Run();
@@ -54,7 +59,10 @@ namespace LoL_AutoLogin
 
         public static void StopExitTimer()
         {
-            exitTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            if (exitTimer != null)
+            {
+                exitTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            }
         }
 
         public static void Exit(object obj)
@@ -93,6 +101,25 @@ namespace LoL_AutoLogin
             notifyIcon.ContextMenu = contextMenu;
             notifyIcon.Text = "LoL AutoLogin";
             notifyIcon.Visible = true;
+
+            var checkVersion = new Thread(() =>
+            {
+                if (CheckUpdates.Check(Version))
+                {
+                    notifyIcon.BalloonTipTitle = "LoL AutoLogin";
+                    notifyIcon.BalloonTipText = "Newer version is available."
+                        + Environment.NewLine
+                        + "Click there to download";
+                    
+                    notifyIcon.BalloonTipClicked += (sender, e) =>
+                    {
+                        System.Diagnostics.Process.Start(CheckUpdates.DownloadUrl);
+                    };
+                    notifyIcon.ShowBalloonTip(5);
+                }
+            });
+
+            checkVersion.Start();
         }
 
         private static void exitItem_Click(object Sender, EventArgs e)
@@ -100,23 +127,32 @@ namespace LoL_AutoLogin
             Exit();
         }
 
-        private static void optionsItem_Click(object Sender, EventArgs e)
-        {
-            StopExitTimer();
-
-            if (gui.ShowDialog() == DialogResult.OK)
-            {
-                StartClient();
-            }
-
-            InitExitTimer();
-        }
-
         private static void startItem_Click(object Sender, EventArgs e)
         {
-            StopExitTimer();
-            StartClient();
-            InitExitTimer();
+            if (gui.Modal)
+            {
+                gui.DialogResult = DialogResult.OK;
+                gui.Close();
+            }
+        }
+
+        private static void optionsItem_Click(object Sender, EventArgs e)
+        {
+            try
+            {
+                StopExitTimer();
+
+                if (gui.ShowDialog() == DialogResult.OK)
+                {
+                    StartClient();
+                }
+
+                InitExitTimer();
+            }
+            catch(InvalidOperationException)
+            {
+                gui.Show();
+            }
         }
 
         private static void StartClient()

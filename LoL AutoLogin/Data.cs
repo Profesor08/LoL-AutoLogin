@@ -7,19 +7,77 @@ namespace LoL_AutoLogin
     class Data
     {
 
-        public static string ClientFile = "LeagueClient.exe";
+        public static readonly string ClientFile = "LeagueClient.exe";
 
-        public static string ClientUx = "LeagueClientUx";
+        public static readonly string ClientUx = "LeagueClientUx";
 
-        public static string Client = "LeagueClient";
+        public static readonly string Client = "LeagueClient";
 
-        public static bool ShowUI = true;
+        public static bool Changed = false;
 
-        public static string GamePath;
+        private static string gamePath;
 
-        public static string Login;
+        private static string login;
 
-        public static string Password;
+        private static string password;
+
+        private static bool showUI = true;
+
+        public static string GamePath
+        {
+            get
+            {
+                return gamePath;
+            }
+
+            set
+            {
+                Changed = true;
+                gamePath = value;
+            }
+        }
+
+        public static string Login
+        {
+            get
+            {
+                return login;
+            }
+
+            set
+            {
+                Changed = true;
+                login = value;
+            }
+        }
+
+        public static string Password
+        {
+            get
+            {
+                return password;
+            }
+
+            set
+            {
+                Changed = true;
+                password = value;
+            }
+        }
+
+        public static bool ShowUI
+        {
+            get
+            {
+                return showUI;
+            }
+
+            set
+            {
+                Changed = true;
+                showUI = value;
+            }
+        }
 
         public static void Save()
         {
@@ -27,58 +85,59 @@ namespace LoL_AutoLogin
             Reg.Set("Path", GamePath);
             Reg.Set("Login", Encryption.Encrypt(Login));
             Reg.Set("Password", Encryption.Encrypt(Password));
+            Changed = false;
         }
 
         public static void Load()
         {
             try
             {
-                ShowUI = GetShowUI();
+                showUI = GetShowUI();
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                ShowUI = true;
+                showUI = true;
             }
 
             try
             {
-                GamePath = GetGamePath();
+                gamePath = GetGamePath();
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                ShowUI = true;
-                GamePath = "";
+                showUI = true;
+                gamePath = "";
             }
 
             if (!File.Exists(GamePath + ClientFile))
             {
                 Log.Write("Game path is wrong. File " + ClientFile + " not found.");
-                ShowUI = true;
-                GamePath = "";
+                showUI = true;
+                gamePath = "";
             }
 
             try
             {
-                Login = GetLogin();
+                login = GetLogin();
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                ShowUI = true;
-                Login = "";
+                showUI = true;
+                login = "";
             }
 
             try
             {
-                Password = GetPassword();
+                password = GetPassword();
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                ShowUI = true;
-                Password = "";
+                showUI = true;
+                password = "";
             }
         }
 

@@ -93,6 +93,10 @@
       <HintPath>..\packages\FontAwesome.Sharp.4.7.0\lib\net40\FontAwesome.Sharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -129,6 +133,7 @@
     <Compile Include="AntiAliasedLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CheckUpdates.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="ImageTextBox.cs">
