@@ -15,6 +15,8 @@ namespace LoL_AutoLogin
 
         public static NotifyIcon notifyIcon;
 
+        public static readonly string Version = "1.7.1";
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -32,9 +34,11 @@ namespace LoL_AutoLogin
 
                 gui = new GUI();
 
+                InitTrayIcon();
+                CheckUpdate();
+
                 if (!Data.ShowUI || gui.ShowDialog() == DialogResult.OK)
                 {
-                    InitTrayIcon();
                     StartClient();
                     InitExitTimer();
                     Application.Run();
@@ -93,6 +97,29 @@ namespace LoL_AutoLogin
             notifyIcon.ContextMenu = contextMenu;
             notifyIcon.Text = "LoL AutoLogin";
             notifyIcon.Visible = true;
+
+            notifyIcon.BalloonTipTitle = notifyIcon.Text;
+            notifyIcon.BalloonTipText = ""
+                + "Newer version is available"
+                + Environment.NewLine
+                + "Click there to go to download page on github.com";
+            notifyIcon.BalloonTipClicked += (sender, e) =>
+            {
+                System.Diagnostics.Process.Start(UpdateChecker.DownloadUrl);
+            };
+        }
+
+        private static void CheckUpdate()
+        {
+            var checkUpdate = new Thread(() =>
+            {
+                if (UpdateChecker.Check(Version))
+                {
+                    notifyIcon.ShowBalloonTip(5000);
+                }
+            });
+
+            checkUpdate.Start();
         }
 
         private static void exitItem_Click(object Sender, EventArgs e)
