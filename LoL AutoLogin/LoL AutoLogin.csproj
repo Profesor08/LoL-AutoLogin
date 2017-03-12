@@ -160,6 +160,12 @@
     <Compile Include="StoreKey.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="UpdateChecker.cs" />
+    <Compile Include="YesNoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="YesNoDialog.Designer.cs">
+      <DependentUpon>YesNoDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -189,16 +195,20 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="YesNoDialog.resx">
+      <DependentUpon>YesNoDialog.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
     <Content Include="icon.ico" />
+    <None Include="Resources\smallFormYesNo.png" />
+    <None Include="Resources\smallFormButton-hover.png" />
+    <None Include="Resources\smallFormButton.png" />
     <None Include="Resources\BeaufortforLOL-Bold.ttf" />
     <None Include="Resources\BeaufortforLOL-Italic.ttf" />
     <None Include="Resources\BeaufortforLOL-Regular.ttf" />
     <None Include="Resources\Friz Quadrata.ttf" />
-    <None Include="Resources\smallFormButton-hover.png" />
-    <None Include="Resources\smallFormButton.png" />
     <None Include="Resources\smallForm.png" />
     <None Include="Resources\options-hover.png" />
     <None Include="Resources\options.png" />

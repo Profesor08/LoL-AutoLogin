@@ -341,9 +341,7 @@ namespace LoL_AutoLogin
         {
             if (Data.Changed)
             {
-                DialogResult dialogResult = MessageBox.Show("Save changes?", "LoL AutoLogin", MessageBoxButtons.YesNo);
-
-                if (dialogResult == DialogResult.Yes)
+                if (YesNoDialog.Show("Save changes?", BeaufortforLOL_Regular) == DialogResult.Yes)
                 {
                     SaveData();
                 }

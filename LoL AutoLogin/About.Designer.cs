@@ -58,6 +58,7 @@
             this.Controls.Add(this.button);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "About";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.About_MouseDown);

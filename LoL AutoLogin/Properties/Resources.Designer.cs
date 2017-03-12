@@ -281,6 +281,16 @@ namespace LoL_AutoLogin.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap smallFormYesNo {
+            get {
+                object obj = ResourceManager.GetObject("smallFormYesNo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
         internal static byte[] Spiegel_Regular {
