@@ -58,7 +58,10 @@ namespace LoL_AutoLogin
 
         public static void StopExitTimer()
         {
-            exitTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            if (exitTimer != null)
+            {
+                exitTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            }
         }
 
         public static void Exit(object obj)
@@ -131,19 +134,24 @@ namespace LoL_AutoLogin
         {
             StopExitTimer();
 
-            if (gui.ShowDialog() == DialogResult.OK)
+            if (gui.Modal)
             {
-                StartClient();
+                gui.WindowState = FormWindowState.Normal;
             }
+            else
+            {                
+                if (gui.ShowDialog() == DialogResult.OK)
+                {
+                    StartClient();
+                }
 
-            InitExitTimer();
+                InitExitTimer();
+            }
         }
 
         private static void startItem_Click(object Sender, EventArgs e)
         {
-            StopExitTimer();
-            StartClient();
-            InitExitTimer();
+            gui.DialogResult = DialogResult.OK;
         }
 
         private static void StartClient()
