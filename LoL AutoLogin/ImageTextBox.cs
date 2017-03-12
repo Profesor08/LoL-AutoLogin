@@ -1,6 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Text;
 
 namespace LoL_AutoLogin
 {
@@ -10,8 +17,6 @@ namespace LoL_AutoLogin
         private PictureBox backgroundPictureBox;
         private Image backgroundImage;
         private Image backgroundImageActive;
-
-        public string TempText = "";
 
         public new Image BackgroundImage
         {
@@ -41,43 +46,32 @@ namespace LoL_AutoLogin
             }
         }
 
-        public DockStyle BackgroundDockStyle
-        {
-            get
-            {
-                return backgroundPictureBox.Dock;
-            }
-
-            set
-            {
-                backgroundPictureBox.Dock = value;
-            }
-        }
-
         public ImageTextBox()
         {
             InitializeComponent();
 
             backgroundPictureBox = new PictureBox();
-            BackgroundDockStyle = DockStyle.Fill;
+            backgroundPictureBox.Dock = DockStyle.Fill;
 
             backgroundPictureBox.MouseClick += (_, args) =>
             {
                 Focus();
             };
- 
+
             Controls.Add(backgroundPictureBox);
+
+            Enter += new EventHandler(FocusEnter);
+            Leave += new EventHandler(FocusLeave);
         }
 
-        protected override void OnEnter(EventArgs e)
+        private void FocusEnter(object sender, EventArgs e)
         {
-            base.OnEnter(e);
+            Text = "";
             DrawTextOnBackgroundImage();
         }
 
-        protected override void OnLeave(EventArgs e)
+        private void FocusLeave(object sender, EventArgs e)
         {
-            base.OnLeave(e);
             DrawTextOnBackgroundImage();
         }
 
@@ -89,7 +83,7 @@ namespace LoL_AutoLogin
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e);
+
         }
 
         private void DrawTextOnBackgroundImage()
