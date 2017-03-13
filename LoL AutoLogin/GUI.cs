@@ -249,7 +249,7 @@ namespace LoL_AutoLogin
                 }
                 else
                 {
-                    MessageBox.Show("Game folder not selected!", "AutoLogin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    YesNoDialog.Show("Game folder not selected!", "ERROR!", MessageBoxButtons.OK);
                     return;
                 }
             }
@@ -325,7 +325,7 @@ namespace LoL_AutoLogin
         {
             if (Data.Changed)
             {
-                if (YesNoDialog.Show("Save changes?") == DialogResult.Yes)
+                if (YesNoDialog.Show("Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SaveData();
                 }

@@ -15,7 +15,7 @@ namespace LoL_AutoLogin
 
         public static NotifyIcon notifyIcon;
 
-        public static readonly string Version = "1.7.1";
+        public static readonly string Version = "1.8";
 
         [STAThread]
         static void Main(string[] args)

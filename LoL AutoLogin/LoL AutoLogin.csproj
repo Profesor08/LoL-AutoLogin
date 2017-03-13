@@ -194,7 +194,9 @@
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
     <Content Include="icon.ico" />
+    <None Include="Resources\smallFormYesNoCancel.png" />
     <None Include="Resources\smallFormYesNo.png" />
+    <None Include="Resources\smallFormYes.png" />
     <None Include="Resources\smallFormButton-hover.png" />
     <None Include="Resources\smallFormButton.png" />
     <None Include="Resources\BeaufortforLOL-Bold.ttf" />

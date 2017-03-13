@@ -175,9 +175,6 @@
   <data name="options_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\options-hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="smallForm" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\smallForm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="smallFormButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\smallFormButton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -198,5 +195,11 @@
   </data>
   <data name="smallFormYesNo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\smallFormYesNo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="smallFormYes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\smallFormYes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="smallFormYesNoCancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\smallFormYesNoCancel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
