@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Text;
-using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 
 namespace LoL_AutoLogin
@@ -26,8 +25,6 @@ namespace LoL_AutoLogin
         AntiAliasedLabel showWindowLabel;
         AntiAliasedLabel gameFolder;
         AntiAliasedLabel titleLabel;
-
-        About about;
 
         public GUI()
         {
@@ -57,17 +54,16 @@ namespace LoL_AutoLogin
 
         private void InitializeFonts()
         {
-            BeaufortforLOL_Regular = LoadFont(Properties.Resources.BeaufortforLOL_Regular);
-            BeaufortforLOL_Bold = LoadFont(Properties.Resources.BeaufortforLOL_Bold);
-            BeaufortforLOL_Italic = LoadFont(Properties.Resources.BeaufortforLOL_Italic);
-            Spiegel_Regular = LoadFont(Properties.Resources.Spiegel_Regular);
-            Spiegel_Italic = LoadFont(Properties.Resources.Spiegel_RegularItalic);
-            Friz_Quadrata = LoadFont(Properties.Resources.Friz_Quadrata);
+            BeaufortforLOL_Regular = CustomFont.Load(Properties.Resources.BeaufortforLOL_Regular);
+            BeaufortforLOL_Bold = CustomFont.Load(Properties.Resources.BeaufortforLOL_Bold);
+            BeaufortforLOL_Italic = CustomFont.Load(Properties.Resources.BeaufortforLOL_Italic);
+            Spiegel_Regular = CustomFont.Load(Properties.Resources.Spiegel_Regular);
+            Spiegel_Italic = CustomFont.Load(Properties.Resources.Spiegel_RegularItalic);
+            Friz_Quadrata = CustomFont.Load(Properties.Resources.Friz_Quadrata);
         }
 
         private void InitializeCustomConponet()
         {
-            about = new About(BeaufortforLOL_Regular);
             login = new ImageTextBox();
             password = new ImageTextBox();
             loginLabel = new AntiAliasedLabel();
@@ -239,18 +235,6 @@ namespace LoL_AutoLogin
             return transparentImage;
         }
 
-        private FontFamily LoadFont(byte[] font)
-        {
-            var pfc = new PrivateFontCollection();
-
-            IntPtr pointer = Marshal.AllocCoTaskMem(font.Length);
-            Marshal.Copy(font, 0, pointer, font.Length);
-            pfc.AddMemoryFont(pointer, font.Length);
-            Marshal.FreeCoTaskMem(pointer);
-
-            return pfc.Families[0];
-        }
-
         private void selectFolderButton_Click(object sender, EventArgs e)
         {
             using (var fbd = new FolderBrowserDialog())
@@ -341,7 +325,7 @@ namespace LoL_AutoLogin
         {
             if (Data.Changed)
             {
-                if (YesNoDialog.Show("Save changes?", BeaufortforLOL_Regular) == DialogResult.Yes)
+                if (YesNoDialog.Show("Save changes?") == DialogResult.Yes)
                 {
                     SaveData();
                 }
@@ -462,7 +446,7 @@ namespace LoL_AutoLogin
 
         private void infoButton_Click(object sender, EventArgs e)
         {
-            about.ShowDialog();
+            YesNoDialog.Show("LoL AutoLogin was developed by Profesor08 in 2017 for comfortable and free use", MessageBoxButtons.OK);
         }
     }
 

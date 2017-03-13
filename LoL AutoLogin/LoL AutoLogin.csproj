@@ -124,15 +124,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="About.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
-    </Compile>
     <Compile Include="AntiAliasedLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomFont.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="ImageTextBox.cs">
@@ -185,9 +180,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="About.resx">
-      <DependentUpon>About.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUI.resx">
       <DependentUpon>GUI.cs</DependentUpon>
     </EmbeddedResource>

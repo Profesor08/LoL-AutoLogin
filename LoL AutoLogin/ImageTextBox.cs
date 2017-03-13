@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing.Text;
 
 namespace LoL_AutoLogin
 {
@@ -98,7 +91,7 @@ namespace LoL_AutoLogin
 
         private string GetPasswordText()
         {
-            return new string('*', Text.Length);
+            return new string(PasswordChar, Text.Length);
         }
     }
 }

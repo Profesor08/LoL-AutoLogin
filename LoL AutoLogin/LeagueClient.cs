@@ -123,7 +123,7 @@ namespace LoL_AutoLogin
 
                 Log.Write("Capturing Screenshot from LeagueClientUx");
                 var clientBitmap = CaptureClientUxScreenshot(clientUx);
-                
+
                 var x1 = (int)(clientBitmap.Width * 0.825);
                 var y1 = 0;
                 var x2 = (int)(clientBitmap.Width * 0.175);
@@ -148,7 +148,7 @@ namespace LoL_AutoLogin
                 {
                     Log.Write("Images are equal enouhg");
                     Log.Write("Game client is ready for password entering");
-                     return true;
+                    return true;
                 }
             }
         }
@@ -295,7 +295,7 @@ namespace LoL_AutoLogin
 
                 Log.Write("Focus on Login field");
                 FocusLogin(clientUx);
-                
+
                 Log.Write("Simulation keyboard input");
                 var sim = new InputSimulator();
 

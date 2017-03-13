@@ -8,36 +8,62 @@ namespace LoL_AutoLogin
     {
         bool mouseDown = false;
         Point mousePosition;
+        AntiAliasedLabel label;
 
-        public YesNoDialog()
+        private YesNoDialog()
         {
             InitializeComponent();
-            this.TransparencyKey = Color.Turquoise;
-            this.BackColor = Color.Turquoise;
+            InitializeCustomComponent();
         }
 
-        public YesNoDialog(string message, FontFamily fontCollection)
+        private YesNoDialog(string message)
         {
             InitializeComponent();
+            InitializeCustomComponent();
+            SetMessage(message);
+        }
+
+        private YesNoDialog(string message, MessageBoxButtons buttons)
+        {
+            InitializeComponent();
+            InitializeCustomComponent();
+            SetMessage(message);
+
+            if (buttons == MessageBoxButtons.OK)
+            {
+                BackgroundImage = Properties.Resources.smallForm;
+                noButton.Visible = false;
+                yesButton.Location = new Point(142, 127);
+                yesButton.Text = "OK";
+            }
+        }
+
+        private void InitializeCustomComponent()
+        {
             this.TransparencyKey = Color.Turquoise;
             this.BackColor = Color.Turquoise;
 
-            yesButton.Font = new Font(fontCollection, 17, FontStyle.Bold, GraphicsUnit.Pixel);
-            yesButton.ForeColor = Color.FromArgb(160, 155, 140);
-            noButton.Font = new Font(fontCollection, 17, FontStyle.Bold, GraphicsUnit.Pixel);
-            noButton.ForeColor = Color.FromArgb(160, 155, 140);
+            var font = CustomFont.Load(Properties.Resources.BeaufortforLOL_Regular);
 
-            var label = new AntiAliasedLabel();
-            label.Text = message;
+            yesButton.Font = new Font(font, 17, FontStyle.Bold, GraphicsUnit.Pixel);
+            yesButton.ForeColor = Color.FromArgb(160, 155, 140);
+            noButton.Font = new Font(font, 17, FontStyle.Bold, GraphicsUnit.Pixel);
+            noButton.ForeColor = Color.FromArgb(160, 155, 140);
+            
+            label = new AntiAliasedLabel();
             label.Location = new Point(30, 35);
             label.Size = new Size(316, 69);
             label.AutoSize = false;
             label.BackColor = Color.Transparent;
             label.ForeColor = Color.FromArgb(160, 155, 140);
-            label.Font = new Font(fontCollection, 17, FontStyle.Bold, GraphicsUnit.Pixel);
             label.TextAlign = ContentAlignment.MiddleCenter;
-
+            label.Font = new Font(font, 17, FontStyle.Bold, GraphicsUnit.Pixel);
             Controls.Add(label);
+        }
+
+        private void SetMessage(string message)
+        {
+            label.Text = message;
         }
 
         private void yesButton_Click(object sender, EventArgs e)
@@ -70,11 +96,6 @@ namespace LoL_AutoLogin
             noButton.BackgroundImage = Properties.Resources.smallFormButton;
         }
 
-        public static DialogResult Show(string message, FontFamily fontCollection)
-        {
-            return new YesNoDialog(message, fontCollection).ShowDialog();
-        }
-
         private void YesNoDialog_MouseDown(object sender, MouseEventArgs e)
         {
             mouseDown = true;
@@ -92,6 +113,16 @@ namespace LoL_AutoLogin
             {
                 Location = new Point(Cursor.Position.X - mousePosition.X, Cursor.Position.Y - mousePosition.Y);
             }
+        }
+
+        public static DialogResult Show(string message)
+        {
+            return new YesNoDialog(message).ShowDialog();
+        }
+
+        public static DialogResult Show(string message, MessageBoxButtons buttons)
+        {
+            return new YesNoDialog(message, buttons).ShowDialog();
         }
     }
 }
