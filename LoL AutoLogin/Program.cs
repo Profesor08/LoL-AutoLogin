@@ -104,7 +104,7 @@ namespace LoL_AutoLogin
             var components = new System.ComponentModel.Container();
 
             notifyIcon = new NotifyIcon(components);
-            notifyIcon.Icon = Icon.FromHandle(Properties.Resources.icon.GetHicon());
+            notifyIcon.Icon = Properties.Resources.icon;
             notifyIcon.ContextMenu = contextMenu;
             notifyIcon.Text = "LoL AutoLogin";
             notifyIcon.Visible = true;

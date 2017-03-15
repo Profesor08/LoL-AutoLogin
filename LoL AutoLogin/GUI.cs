@@ -36,7 +36,7 @@ namespace LoL_AutoLogin
 
             InitPlayButtonAnimations();
 
-            Icon = Icon.FromHandle(Properties.Resources.icon.GetHicon());
+            Icon = Properties.Resources.icon;
 
             closeButton.ForeColor = Color.FromArgb(160, 155, 140);
 
