@@ -7,7 +7,7 @@ namespace LoL_AutoLogin
     {
         public TextRenderingHint TextRenderingHint = TextRenderingHint.AntiAlias;
 
-        public AntiAliasedLabel() : base()
+        public AntiAliasedLabel()
         {
             AutoSize = true;
             UseCompatibleTextRendering = true;
