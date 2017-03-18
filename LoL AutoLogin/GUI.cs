@@ -44,7 +44,7 @@ namespace LoL_AutoLogin
 
             if (Data.ShowUI)
             {
-                showWindowChechBox.Image = Properties.Resources.check_checked;
+                showWindowCheckBox.Image = Properties.Resources.check_checked;
             }
 
             gameFolder.Text = Data.GamePath;
@@ -235,26 +235,6 @@ namespace LoL_AutoLogin
             return transparentImage;
         }
 
-        private void selectFolderButton_Click(object sender, EventArgs e)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    var path = fbd.SelectedPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-                    gameFolder.Text = path;
-                    Data.GamePath = path;
-                }
-                else
-                {
-                    YesNoDialog.Show("Game folder not selected!", "ERROR!", MessageBoxButtons.OK);
-                    return;
-                }
-            }
-        }
-
         private void SaveData()
         {
             Data.GamePath = gameFolder.Text;
@@ -268,6 +248,7 @@ namespace LoL_AutoLogin
 
         private void login_Enter(object sender, EventArgs e)
         {
+            Audio.InputFocus();
             tempLoginText = login.Text;
             login.Text = "";
             Data.Changed = true;
@@ -290,6 +271,7 @@ namespace LoL_AutoLogin
 
         private void password_Enter(object sender, EventArgs e)
         {
+            Audio.InputFocus();
             tempPasswordText = password.Text;
             password.Text = "";
             Data.Changed = true;
@@ -308,8 +290,14 @@ namespace LoL_AutoLogin
             }
         }
 
+        private void playButton_MouseEnter(object sender, EventArgs e)
+        {
+            Audio.PlayButtonHover();
+        }
+
         private void playButton_Click(object sender, EventArgs e)
         {
+            Audio.PlayButtonClick();
             DialogResult = DialogResult.OK;
             SaveData();
         }
@@ -323,6 +311,8 @@ namespace LoL_AutoLogin
 
         private void closeButton_Click(object sender, EventArgs e)
         {
+            Audio.ButtonClick();
+
             if (Data.Changed)
             {
                 if (YesNoDialog.Show("Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -336,6 +326,7 @@ namespace LoL_AutoLogin
 
         private void closeButton_MouseEnter(object sender, EventArgs e)
         {
+            Audio.ButtonHover();
             closeButton.ForeColor = Color.FromArgb(240, 230, 210);
         }
 
@@ -346,11 +337,13 @@ namespace LoL_AutoLogin
 
         private void hideButton_Click(object sender, EventArgs e)
         {
+            Audio.ButtonClick();
             WindowState = FormWindowState.Minimized;
         }
 
         private void hideButton_MouseEnter(object sender, EventArgs e)
         {
+            Audio.ButtonHover();
             hideButton.ForeColor = Color.FromArgb(240, 230, 210);
         }
 
@@ -381,29 +374,33 @@ namespace LoL_AutoLogin
             }
         }
 
-        private void showWindowChechBox_MouseDown(object sender, MouseEventArgs e)
+        private void showWindowCheckBox_MouseDown(object sender, MouseEventArgs e)
         {
+            Audio.ButtonClick();
+
             Data.ShowUI = !Data.ShowUI;
 
             if (Data.ShowUI)
             {
-                showWindowChechBox.Image = Properties.Resources.check_checked_hover;
+                showWindowCheckBox.Image = Properties.Resources.check_checked_hover;
             }
             else
             {
-                showWindowChechBox.Image = Properties.Resources.check_hover;
+                showWindowCheckBox.Image = Properties.Resources.check_hover;
             }
         }
 
         private void showWindow_MouseEnter(object sender, EventArgs e)
         {
+            Audio.ButtonHover();
+
             if (Data.ShowUI)
             {
-                showWindowChechBox.Image = Properties.Resources.check_checked_hover;
+                showWindowCheckBox.Image = Properties.Resources.check_checked_hover;
             }
             else
             {
-                showWindowChechBox.Image = Properties.Resources.check_hover;
+                showWindowCheckBox.Image = Properties.Resources.check_hover;
             }
         }
 
@@ -411,22 +408,12 @@ namespace LoL_AutoLogin
         {
             if (Data.ShowUI)
             {
-                showWindowChechBox.Image = Properties.Resources.check_checked;
+                showWindowCheckBox.Image = Properties.Resources.check_checked;
             }
             else
             {
-                showWindowChechBox.Image = Properties.Resources.check;
+                showWindowCheckBox.Image = Properties.Resources.check;
             }
-        }
-
-        private void infoButton_MouseEnter(object sender, EventArgs e)
-        {
-            infoButton.Image = Properties.Resources.info_hover;
-        }
-
-        private void infoButton_MouseLeave(object sender, EventArgs e)
-        {
-            infoButton.Image = Properties.Resources.info;
         }
 
         private void GUI_Click(object sender, EventArgs e)
@@ -436,6 +423,7 @@ namespace LoL_AutoLogin
 
         private void selectFolder_MouseEnter(object sender, EventArgs e)
         {
+            Audio.ButtonHover();
             selectFolder.BackgroundImage = Properties.Resources.options_hover;
         }
 
@@ -444,8 +432,41 @@ namespace LoL_AutoLogin
             selectFolder.BackgroundImage = Properties.Resources.options;
         }
 
+        private void selectFolderButton_Click(object sender, EventArgs e)
+        {
+            Audio.ButtonClick();
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    var path = fbd.SelectedPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                    gameFolder.Text = path;
+                    Data.GamePath = path;
+                }
+                else
+                {
+                    YesNoDialog.Show("Game folder not selected!", "ERROR!", MessageBoxButtons.OK);
+                    return;
+                }
+            }
+        }
+
+        private void infoButton_MouseEnter(object sender, EventArgs e)
+        {
+            Audio.ButtonHover();
+            infoButton.Image = Properties.Resources.info_hover;
+        }
+
+        private void infoButton_MouseLeave(object sender, EventArgs e)
+        {
+            infoButton.Image = Properties.Resources.info;
+        }
+
         private void infoButton_Click(object sender, EventArgs e)
         {
+            Audio.ButtonClick();
             YesNoDialog.Show("LoL AutoLogin was developed by Profesor08 in 2017 for comfortable and free use", MessageBoxButtons.OK);
         }
     }

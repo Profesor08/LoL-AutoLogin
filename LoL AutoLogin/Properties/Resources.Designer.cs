@@ -61,6 +61,56 @@ namespace LoL_AutoLogin.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] audio_button_click {
+            get {
+                object obj = ResourceManager.GetObject("audio_button_click", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] audio_button_hover {
+            get {
+                object obj = ResourceManager.GetObject("audio_button_hover", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] audio_input_focus {
+            get {
+                object obj = ResourceManager.GetObject("audio_input_focus", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] audio_play_click {
+            get {
+                object obj = ResourceManager.GetObject("audio_play_click", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] audio_play_hover {
+            get {
+                object obj = ResourceManager.GetObject("audio_play_hover", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap background {

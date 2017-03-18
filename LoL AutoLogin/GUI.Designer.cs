@@ -35,11 +35,11 @@
             this.hideButton = new System.Windows.Forms.Label();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.showWindowChechBox = new System.Windows.Forms.PictureBox();
+            this.showWindowCheckBox = new System.Windows.Forms.PictureBox();
             this.infoButton = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.playButton)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.showWindowChechBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.showWindowCheckBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoButton)).BeginInit();
             this.SuspendLayout();
             // 
@@ -79,6 +79,7 @@
             this.playButton.TabStop = false;
             this.playButton.Click += new System.EventHandler(this.playButton_Click);
             this.playButton.Paint += new System.Windows.Forms.PaintEventHandler(this.playButton_Paint);
+            this.playButton.MouseEnter += new System.EventHandler(this.playButton_MouseEnter);
             // 
             // closeButton
             // 
@@ -134,21 +135,21 @@
             this.richTextBox1.Text = " gdfg dfg dfg dfg";
             this.richTextBox1.Visible = false;
             // 
-            // showWindowChechBox
+            // showWindowCheckBox
             // 
-            this.showWindowChechBox.BackColor = System.Drawing.Color.Transparent;
-            this.showWindowChechBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("showWindowChechBox.BackgroundImage")));
-            this.showWindowChechBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.showWindowChechBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.showWindowChechBox.Image = ((System.Drawing.Image)(resources.GetObject("showWindowChechBox.Image")));
-            this.showWindowChechBox.Location = new System.Drawing.Point(74, 272);
-            this.showWindowChechBox.Name = "showWindowChechBox";
-            this.showWindowChechBox.Size = new System.Drawing.Size(16, 16);
-            this.showWindowChechBox.TabIndex = 16;
-            this.showWindowChechBox.TabStop = false;
-            this.showWindowChechBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.showWindowChechBox_MouseDown);
-            this.showWindowChechBox.MouseEnter += new System.EventHandler(this.showWindow_MouseEnter);
-            this.showWindowChechBox.MouseLeave += new System.EventHandler(this.showWindow_MouseLeave);
+            this.showWindowCheckBox.BackColor = System.Drawing.Color.Transparent;
+            this.showWindowCheckBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("showWindowCheckBox.BackgroundImage")));
+            this.showWindowCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.showWindowCheckBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.showWindowCheckBox.Image = ((System.Drawing.Image)(resources.GetObject("showWindowCheckBox.Image")));
+            this.showWindowCheckBox.Location = new System.Drawing.Point(74, 272);
+            this.showWindowCheckBox.Name = "showWindowCheckBox";
+            this.showWindowCheckBox.Size = new System.Drawing.Size(16, 16);
+            this.showWindowCheckBox.TabIndex = 16;
+            this.showWindowCheckBox.TabStop = false;
+            this.showWindowCheckBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.showWindowCheckBox_MouseDown);
+            this.showWindowCheckBox.MouseEnter += new System.EventHandler(this.showWindow_MouseEnter);
+            this.showWindowCheckBox.MouseLeave += new System.EventHandler(this.showWindow_MouseLeave);
             // 
             // infoButton
             // 
@@ -183,7 +184,7 @@
             this.ClientSize = new System.Drawing.Size(625, 343);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.infoButton);
-            this.Controls.Add(this.showWindowChechBox);
+            this.Controls.Add(this.showWindowCheckBox);
             this.Controls.Add(this.richTextBox2);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.hideButton);
@@ -199,7 +200,7 @@
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GUI_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GUI_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.playButton)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.showWindowChechBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.showWindowCheckBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoButton)).EndInit();
             this.ResumeLayout(false);
 
@@ -212,7 +213,7 @@
         private System.Windows.Forms.Label hideButton;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.PictureBox showWindowChechBox;
+        private System.Windows.Forms.PictureBox showWindowCheckBox;
         private System.Windows.Forms.PictureBox infoButton;
         private System.Windows.Forms.Label label1;
     }

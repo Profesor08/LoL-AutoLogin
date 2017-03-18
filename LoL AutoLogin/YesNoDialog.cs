@@ -165,6 +165,22 @@ namespace LoL_AutoLogin
             Ignore.Font = new Font(regular, 13, FontStyle.Bold, GraphicsUnit.Pixel);
             Ignore.ForeColor = Color.FromArgb(160, 155, 140);
 
+            OK.Click += new EventHandler(buttonAudioClick);
+            Yes.Click += new EventHandler(buttonAudioClick);
+            No.Click += new EventHandler(buttonAudioClick);
+            Cancel.Click += new EventHandler(buttonAudioClick);
+            Abort.Click += new EventHandler(buttonAudioClick);
+            Retry.Click += new EventHandler(buttonAudioClick);
+            Ignore.Click += new EventHandler(buttonAudioClick);
+
+            OK.MouseEnter += new EventHandler(buttonAudioHover);
+            Yes.MouseEnter += new EventHandler(buttonAudioHover);
+            No.MouseEnter += new EventHandler(buttonAudioHover);
+            Cancel.MouseEnter += new EventHandler(buttonAudioHover);
+            Abort.MouseEnter += new EventHandler(buttonAudioHover);
+            Retry.MouseEnter += new EventHandler(buttonAudioHover);
+            Ignore.MouseEnter += new EventHandler(buttonAudioHover);
+
             text = new AntiAliasedLabel();
             text.Location = new Point(20, 35);
             text.Size = new Size(Width - 40, 70);
@@ -192,6 +208,16 @@ namespace LoL_AutoLogin
         private void SetMessage(string message)
         {
             text.Text = message;
+        }
+
+        private void buttonAudioHover(object sender, EventArgs e)
+        {
+            Audio.ButtonHover();
+        }
+
+        private void buttonAudioClick(object sender, EventArgs e)
+        {
+            Audio.ButtonClick();
         }
 
         private void button_MouseEnter(object sender, EventArgs e)

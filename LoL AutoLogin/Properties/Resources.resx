@@ -202,4 +202,19 @@
   <data name="icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="audio_play_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\audio-play-click.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="audio_play_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\audio-play-hover.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="audio_button_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\audio-button-click.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="audio_button_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\audio-button-hover.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="audio_input_focus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\audio-input-focus.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
