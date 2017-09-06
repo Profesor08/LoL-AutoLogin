@@ -22,6 +22,13 @@ namespace LoL_AutoLogin
         /// </summary>
         private Dictionary<int, Bitmap> templates;
 
+        /// <summary>
+        /// Timeout to exit after if nothing found in seconds
+        /// </summary>
+        private int exitTimeout = 20;
+
+        private DateTime stopTime;
+
         public LeagueClient()
         {
             templates = new Dictionary<int, Bitmap>()
@@ -74,6 +81,20 @@ namespace LoL_AutoLogin
             }
         }
 
+        private void ExtraStop()
+        {
+            if (DateTime.Compare(DateTime.Now, stopTime) >= 0)
+            {
+                Application.Exit();
+                Environment.Exit(0);
+            }
+        }
+
+        private void StartTimer()
+        {
+            stopTime = DateTime.Now.AddSeconds(exitTimeout);
+        }
+
         /// <summary>
         /// Waiting for LeagueClientUx is loaded and it is ready for entering login and password
         /// </summary>
@@ -81,6 +102,7 @@ namespace LoL_AutoLogin
         {
             get
             {
+                StartTimer();
                 return LoginFormReady(ClientUxProcess);
             }
         }
@@ -96,6 +118,8 @@ namespace LoL_AutoLogin
 
                 while (true)
                 {
+                    ExtraStop();
+
                     clientUx = Process.GetProcessesByName(Data.ClientUx).FirstOrDefault();
 
                     if (clientUx != null && (int)clientUx.MainWindowHandle > 0)
@@ -117,6 +141,8 @@ namespace LoL_AutoLogin
 
             while (true)
             {
+                ExtraStop();
+
                 Thread.Sleep(200);
                 Log.Write("Focus on LeagueClientUx");
                 FocusProcess(clientUx);
@@ -136,13 +162,19 @@ namespace LoL_AutoLogin
                 }
 
                 Log.Write("Croping screenshot");
-                var cropped = CropImage(clientBitmap, new Rectangle(x1, y1, x2, y2));
+                var cropped = CropImage(clientBitmap, new Rectangle(x1, y1, x2, y2 / 3 * 2));
+                var croppedTemplate = CropImage(templates[x2], new Rectangle(0, 0, templates[x2].Width, templates[x2].Height / 3 * 2));
+
+
+                //cropped.Save("C:\\cropped.png", ImageFormat.Png);
+                //croppedTemplate.Save("C:\\croppedTemplate.png", ImageFormat.Png);
 
                 Log.Write("Comparing images");
-                var equal = CompareImages(cropped, templates[x2], 0.95, 0.99f);
+                var equal = CompareImages(cropped, croppedTemplate, 0.90, 0.99f);
 
                 clientBitmap.Dispose();
                 cropped.Dispose();
+                croppedTemplate.Dispose();
 
                 if (equal)
                 {
@@ -161,6 +193,7 @@ namespace LoL_AutoLogin
         {
             while (!ApplicationIsActivated(process))
             {
+                ExtraStop();
                 Thread.Sleep(10);
                 NativeMethods.SetForegroundWindow(process.MainWindowHandle);
                 NativeMethods.ShowWindow(process.MainWindowHandle, NativeMethods.ShowWindowEnum.Restore);
@@ -243,30 +276,25 @@ namespace LoL_AutoLogin
         /// <returns></returns>
         public bool CompareImages(Bitmap image, Bitmap targetImage, double compareLevel, float similarityThreshold)
         {
-
-            var newBitmap1 = ChangePixelFormat(new Bitmap(image), PixelFormat.Format24bppRgb);
-            var newBitmap2 = ChangePixelFormat(new Bitmap(targetImage), PixelFormat.Format24bppRgb);
-
-            // Setup the AForge library
-            var tm = new ExhaustiveTemplateMatching(similarityThreshold);
-
-            // Process the images
-            var results = tm.ProcessImage(newBitmap1, newBitmap2);
-
-            image.Dispose();
-            newBitmap1.Dispose();
-            newBitmap2.Dispose();
-
-            // Compare the results, 0 indicates no match so return false
-            if (results.Length <= 0)
+            using (var newBitmap1 = ChangePixelFormat(new Bitmap(image), PixelFormat.Format24bppRgb))
+            using (var newBitmap2 = ChangePixelFormat(new Bitmap(targetImage), PixelFormat.Format24bppRgb))
             {
-                return false;
-            }
+                var tm = new ExhaustiveTemplateMatching(similarityThreshold);
+                var results = tm.ProcessImage(newBitmap1, newBitmap2);
 
-            // Return true if similarity score is equal or greater than the comparison level
-            var match = results[0].Similarity >= compareLevel;
+                // Compare the results, 0 indicates no match so return false
+                if (results.Length <= 0)
+                {
+                    return false;
+                }
 
-            return match;
+                // Return true if similarity score is equal or greater than the comparison level
+                var match = results[0].Similarity >= compareLevel;
+
+                image.Dispose();
+
+                return match;
+            } 
         }
 
         /// <summary>
@@ -301,10 +329,13 @@ namespace LoL_AutoLogin
 
                 //FocusProcess(clientUx);
                 Thread.Sleep(100);
+                FocusProcess(clientUx);
                 sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
                 Thread.Sleep(100);
+                FocusProcess(clientUx);
                 sim.Keyboard.TextEntry(Data.Login);
                 Thread.Sleep(200);
+                FocusProcess(clientUx);
                 sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
                 sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
                 sim.Keyboard.TextEntry(Data.Password);

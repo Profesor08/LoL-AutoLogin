@@ -15,7 +15,7 @@ namespace LoL_AutoLogin
         {
             using (var wc = new WebClient())
             {
-                try
+                try 
                 {
                     wc.Headers.Add(HttpRequestHeader.UserAgent, UserAgent);
 
