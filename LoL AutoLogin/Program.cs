@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace LoL_AutoLogin
 {
@@ -15,7 +16,7 @@ namespace LoL_AutoLogin
 
         public static NotifyIcon notifyIcon;
 
-        public static readonly string Version = "1.8.2";
+        public static readonly string Version = "1.8.3";
 
         [STAThread]
         static void Main(string[] args)
@@ -122,15 +123,16 @@ namespace LoL_AutoLogin
 
         private static void CheckUpdate()
         {
-            var checkUpdate = new Thread(() =>
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+
+            new Thread(() =>
             {
-                if (UpdateChecker.Check(Version))
+                if (UpdateChecker.Check(versionInfo.FileVersion))
                 {
                     notifyIcon.ShowBalloonTip(5000);
                 }
-            });
-
-            checkUpdate.Start();
+            }).Start();
         }
 
         private static void exitItem_Click(object Sender, EventArgs e)

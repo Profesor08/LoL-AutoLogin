@@ -49,7 +49,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>LoL_AutoLogin.Program</StartupObject>
@@ -68,7 +68,7 @@
     <ManifestKeyFile>LoL AutoLogin_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -112,6 +112,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
@@ -140,6 +141,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Audio.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="CustomFont.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Encryption.cs" />

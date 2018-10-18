@@ -2,7 +2,7 @@
 
 namespace LoL_AutoLogin
 {
-    class Reg
+    class Reg234
     {
         private static string keyName = "HKEY_LOCAL_MACHINE\\SOFTWARE\\LolAutoLogin\\";
 

@@ -15,11 +15,11 @@ namespace LoL_AutoLogin
 
         private static bool showUI = true;
 
-        private static string gamePath;
+        private static string gamePath = "";
 
-        private static string login;
+        private static string login = "";
 
-        private static string password;
+        private static string password = "";
 
         private static bool TrackChanges = false;
 
@@ -99,10 +99,10 @@ namespace LoL_AutoLogin
 
         public static void Save()
         {
-            Reg.Set("ShowUI", ShowUI);
-            Reg.Set("Path", GamePath);
-            Reg.Set("Login", Encryption.Encrypt(Login));
-            Reg.Set("Password", Encryption.Encrypt(Password));
+            Config.Set("ShowUI", ShowUI.ToString());
+            Config.Set("Path", GamePath);
+            Config.Set("Login", Encryption.Encrypt(Login));
+            Config.Set("Password", Encryption.Encrypt(Password));
         }
 
         public static void Load()
@@ -164,12 +164,12 @@ namespace LoL_AutoLogin
         static string GetGamePath()
         {
             Log.Write("Reading game path from registry");
-            var gamePath = Reg.Get("Path");
+            var gamePath = Config.Get("Path");
 
             if (gamePath == null)
             {
                 Log.Write("Game directory not found. Trying to find game installation info.");
-                gamePath = Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Riot Games\\League of Legends\\", "Path", null);
+                gamePath = Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Riot Games\\League of Legends\\", "Path", null).ToString();
             }
 
             return gamePath.ToString().TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
@@ -177,17 +177,17 @@ namespace LoL_AutoLogin
 
         static string GetLogin()
         {
-            return Encryption.Decrypt(Reg.Get("Login", "").ToString());
+            return Encryption.Decrypt(Config.Get("Login", "").ToString());
         }
 
         static string GetPassword()
         {
-            return Encryption.Decrypt(Reg.Get("Password", "").ToString());
+            return Encryption.Decrypt(Config.Get("Password", "").ToString());
         }
 
         static bool GetShowUI()
         {
-            var show = Reg.Get("ShowUI");
+            var show = Config.Get("ShowUI");
 
             if (show == null)
             {
@@ -196,7 +196,7 @@ namespace LoL_AutoLogin
 
             try
             {
-                return Convert.ToBoolean(show.ToString());
+                return Convert.ToBoolean(show);
             }
             catch (FormatException)
             {
